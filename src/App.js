@@ -1,31 +1,8 @@
 // Libraries
-import React, { useContext } from 'react';
+import React from 'react';
 // Components | Utils
-import Introduction from './views/Introduction';
-import Desktop from './views/Desktop';
-import { UserContext } from './contexts/UserContext';
-import DesktopContextProvider from './contexts/DesktopContext';
+import GameApp from './game/App';
 
-function App() {
-  const { isUserSelected } = useContext(UserContext);
-
-  /*
-  ====================================================
-  ==================== RENDER ========================
-  ====================================================
-  */
-
-  return (
-    <div id="app">
-      {isUserSelected ? (
-        <DesktopContextProvider>
-          <Desktop />
-        </DesktopContextProvider>
-      ) : (
-        <Introduction />
-      )}
-    </div>
-  );
-}
+const App = () => <GameApp />;
 
 export default App;

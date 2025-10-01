@@ -3,7 +3,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { ThemeProvider } from 'styled-components';
 // Components | Utils
-import UserContextProvider from './contexts/UserContext';
 import App from './App';
 // Assets
 import './index.scss';
@@ -18,11 +17,9 @@ console.log(
 
 ReactDOM.render(
   <React.StrictMode>
-    <UserContextProvider>
-      <ThemeProvider theme={theme}>
-        <App />
-      </ThemeProvider>
-    </UserContextProvider>
+    <ThemeProvider theme={theme}>
+      <App />
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

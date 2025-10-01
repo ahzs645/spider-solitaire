@@ -24,6 +24,12 @@ You can download the project by cloning it from the Github site or by typing the
 git clone https://github.com/baspinarenes/spider-solitaire
 ```
 
+### Project Structure
+
+- `src/game` – active Spider Solitaire app (contexts, components, views, and game utilities).
+- `src/legacy` – legacy desktop/login shell kept for reference.
+- `src/assets` – shared card, audio, and cursor assets consumed by the game package.
+
 ## Run Project
 
 In the project directory you can run the following lines:
@@ -32,6 +38,8 @@ In the project directory you can run the following lines:
 npm install
 npm start
 ```
+
+> **Note:** When using newer Node versions (v17+), run the dev server with `NODE_OPTIONS=--openssl-legacy-provider` to avoid the known OpenSSL issue: `NODE_OPTIONS=--openssl-legacy-provider npm start`.
 
 ## Test Project
 
