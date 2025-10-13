@@ -1,6 +1,6 @@
 // Libraries
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { ThemeProvider } from 'styled-components';
 // Components | Utils
 import App from './App';
@@ -15,11 +15,13 @@ console.log(
 );
 /* eslint-enable no-console */
 
-ReactDOM.render(
+const container = document.getElementById('root');
+const root = createRoot(container);
+
+root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <App />
     </ThemeProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
+  </React.StrictMode>
 );

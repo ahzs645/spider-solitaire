@@ -1,17 +1,50 @@
 // Libraries
 import React from 'react';
-import { Draggable } from 'react-beautiful-dnd';
+import { useDraggable } from '@dnd-kit/core';
+import { CSS } from '@dnd-kit/utilities';
 // Components | Utils
-import { cardImages } from '../../../utils/cardUtils';
+import {
+  cardBackImage,
+  cardImages,
+  cardInverseImages,
+  getRankLabel,
+} from '../../../utils/cardUtils';
 import getSounds from '../../../utils/soundUtils';
 // Assets
 import * as Styled from './styles';
 
-const Card = (props) => {
+function CardArtworkComponent({ card, isClose, useInverse = false }) {
+  if (isClose || !card) {
+    return (
+      <Styled.CardBackImage
+        draggable={false}
+        src={cardBackImage}
+        alt="card"
+      />
+    );
+  }
+
+  const rankLabel = getRankLabel(card.rank);
+  const imageSet = useInverse ? cardInverseImages : cardImages;
+  const cardImage = imageSet[card.suit][card.rank];
+
+  return (
+    <Styled.CardImage
+      draggable={false}
+      src={cardImage}
+      alt={`card ${rankLabel} of ${card.suit}`}
+      data-testid="card-face"
+    />
+  );
+}
+
+export const CardArtwork = React.memo(CardArtworkComponent);
+
+function Card(props) {
   const {
     index,
     deckNo,
-    cardNo,
+    card,
     isClose,
     isDragDisabled,
     isInSelectedCards,
@@ -20,6 +53,17 @@ const Card = (props) => {
   } = props;
 
   const [mouseDownSound] = getSounds('mouse-down');
+
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    isDragging,
+  } = useDraggable({
+    id: `deck${deckNo}-${index}`,
+    disabled: isDragDisabled,
+  });
 
   const handleMouseDownFromCard = (e) => {
     e.preventDefault();
@@ -32,42 +76,38 @@ const Card = (props) => {
   ====================================================
   */
 
-  function getStyle(style, snapshot) {
-    /* 
-    This function overrides the default gliding behavior of the react-beautiful-dnd 
-    package when the drag is above the other draggable object.
-    */
-    if (snapshot.isDropAnimating) {
+  function getStyle() {
+    const style = {
+      transform: CSS.Translate.toString(transform),
+      zIndex: isDragging ? 2000 : 1,
+    };
+
+    if (isDragging) {
+      // Hide the original element while the drag preview is rendered via the overlay.
       return {
         ...style,
-        // cannot be 0, but make it super tiny
-        transitionDuration: '0.001s',
+        opacity: 0,
+        pointerEvents: 'none',
       };
-    }
-
-    if (snapshot.isDragging) {
-      // We do not apply it to the being dragged object so that the drag behavior can continue.
-      return style;
     }
 
     if (isInSelectedCards) {
       return {
         ...style,
         display: 'none',
-        // We ovveride the "translate(... px)" that performs the sliding behavior as "none".
+        // We override the "translate(... px)" that performs the sliding behavior as "none".
         transform: 'none',
       };
     }
 
     return {
       ...style,
-      // We ovveride the "translate(... px)" that performs the sliding behavior as "none".
+      // We override the "translate(... px)" that performs the sliding behavior as "none".
       transform: 'none',
-      filter:
-        isSourceInHint || isDestinationInHint ? 'invert(100%)' : '',
-      transition: isDestinationInHint ? 'filter 400ms 300ms' : '',
     };
   }
+
+  const shouldUseInverse = isSourceInHint || isDestinationInHint;
 
   /*
   ====================================================
@@ -76,42 +116,32 @@ const Card = (props) => {
   */
 
   return deckNo ? (
-    <Draggable
-      draggableId={`deck${deckNo}${index}`}
-      index={index}
-      isDragDisabled={isDragDisabled}
+    <Styled.CardContainer
+      ref={setNodeRef}
+      style={getStyle()}
+      {...listeners}
+      {...attributes}
+      onMouseDown={
+        !isDragDisabled ? handleMouseDownFromCard : undefined
+      }
     >
-      {(provided, snapshot) => {
-        return (
-          <Styled.CardContainer
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-            style={getStyle(provided.draggableProps.style, snapshot)}
-            onMouseDown={
-              !isDragDisabled ? handleMouseDownFromCard : undefined
-            }
-          >
-            <div className="card">
-              <img
-                draggable={false} // Removes the preview created by dragging and holding the image.
-                src={isClose ? cardImages[0] : cardImages[cardNo]}
-                alt="card"
-              />
-            </div>
-          </Styled.CardContainer>
-        );
-      }}
-    </Draggable>
+      <div className="card">
+        <CardArtwork
+          card={card}
+          isClose={isClose}
+          useInverse={shouldUseInverse}
+        />
+      </div>
+    </Styled.CardContainer>
   ) : (
     <div className="card">
-      <img
-        draggable={false} // Removes the preview created by dragging and holding the image.
-        src={isClose ? cardImages[0] : cardImages[cardNo]}
-        alt="card"
+      <CardArtwork
+        card={card}
+        isClose={isClose}
+        useInverse={shouldUseInverse}
       />
     </div>
   );
-};
+}
 
 export default React.memo(Card);

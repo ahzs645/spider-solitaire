@@ -1,5 +1,6 @@
 import {
   cardImages,
+  cardInverseImages,
   cardCounts,
   getCardNo,
   shuffle,
@@ -12,19 +13,85 @@ import {
   getHint,
 } from './cardUtils';
 
+const createCard = (rank, suit = 'spades', copy = 0) => ({
+  id: `${suit}-${rank}-${copy}`,
+  suit,
+  rank,
+});
+
 describe('cardUtils', () => {
   HTMLMediaElement.prototype.play = jest.fn();
 
   describe('Constants', () => {
-    it('should return correct card images', () => {
-      for (let i = 1; i < 14; i += 1) {
-        expect(cardImages[i]).toMatch(new RegExp(`${i}.webp`));
-      }
+    it('should map ranks to static image assets', () => {
+      const suitNameMap = {
+        spades: 'Spades',
+        hearts: 'Hearts',
+        clubs: 'Clubs',
+        diamonds: 'Diamonds',
+      };
+      const rankAssetNames = {
+        1: 'Ace',
+        2: '2',
+        3: '3',
+        4: '4',
+        5: '5',
+        6: '6',
+        7: '7',
+        8: '8',
+        9: '9',
+        10: '10',
+        11: 'Jack',
+        12: 'Queen',
+        13: 'King',
+      };
+
+      Object.entries(cardImages).forEach(([suit, ranks]) => {
+        Object.entries(ranks).forEach(([rank, assetPath]) => {
+          const expectedFragment = `${rankAssetNames[rank]}_${suitNameMap[suit]}`;
+          expect(assetPath).toMatch(
+            new RegExp(`${expectedFragment}.*\\.png$`)
+          );
+        });
+      });
+    });
+
+    it('should map ranks to inverse hint assets', () => {
+      const suitNameMap = {
+        spades: 'Spades',
+        hearts: 'Hearts',
+        clubs: 'Clubs',
+        diamonds: 'Diamonds',
+      };
+      const rankAssetNames = {
+        1: 'Ace',
+        2: '2',
+        3: '3',
+        4: '4',
+        5: '5',
+        6: '6',
+        7: '7',
+        8: '8',
+        9: '9',
+        10: '10',
+        11: 'Jack',
+        12: 'Queen',
+        13: 'King',
+      };
+
+      Object.entries(cardInverseImages).forEach(([suit, ranks]) => {
+        Object.entries(ranks).forEach(([rank, assetPath]) => {
+          const expectedFragment = `${rankAssetNames[rank]}_${suitNameMap[suit]}_Inverse`;
+          expect(assetPath).toMatch(
+            new RegExp(`${expectedFragment}.*\\.png$`)
+          );
+        });
+      });
     });
 
     it('should be 8 of each card no when initial state', () => {
-      Object.keys(cardCounts).forEach((cardName) => {
-        expect(cardCounts[cardName]).toBe(8);
+      Object.values(cardCounts).forEach((count) => {
+        expect(count).toBe(8);
       });
     });
   });
@@ -43,94 +110,109 @@ describe('cardUtils', () => {
   });
 
   describe('checkCompletedDeck()', () => {
-    it('should return true if deck containing ordered 1 to 13 cards', () => {
-      const cards = [
-        3, 5, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 8,
+    it('should return true if deck contains a full descending suited run', () => {
+      const leadingCards = [
+        createCard(9, 'hearts', 0),
+        createCard(8, 'hearts', 0),
       ];
-      expect(checkCompletedDeck(cards)).toBeTruthy();
+      const fullRun = Array.from({ length: 13 }, (_, index) =>
+        createCard(13 - index, 'spades', index)
+      );
+      expect(checkCompletedDeck([...leadingCards, ...fullRun])).toBeTruthy();
     });
 
-    it('should return false if deck not containing ordered 1 to 13 cards', () => {
-      const cards = [1, 5, 2, 3, 4, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+    it('should return false if deck does not contain a suited run', () => {
+      const cards = Array.from({ length: 13 }, (_, index) =>
+        createCard(13 - index, index % 2 === 0 ? 'spades' : 'hearts', index)
+      );
       expect(checkCompletedDeck(cards)).toBeFalsy();
     });
   });
 
   describe('moveCards()', () => {
-    it('should be drag when moved deck is continue of destination deck', () => {
+    it('should move a suited descending stack onto a matching parent', () => {
       const cardDecks = {
         deck1: {
-          cards: [7, 13, 11, 13, 12],
-          visibleCardCount: 1,
+          cards: [
+            createCard(9, 'spades', 0),
+            createCard(8, 'spades', 0),
+            createCard(7, 'spades', 0),
+          ],
+          visibleCardCount: 3,
         },
         deck2: {
-          cards: [12, 6, 3, 2, 5, 11],
+          cards: [createCard(10, 'spades', 0)],
           visibleCardCount: 1,
         },
       };
       const source = {
-        index: 4,
+        index: 0,
         droppableId: 'deck1',
       };
       const destination = {
-        index: 6,
+        index: cardDecks.deck2.cards.length,
         droppableId: 'deck2',
       };
 
       const result = moveCards(cardDecks, source, destination);
 
       expect(result.isDragSuccessful).toBeTruthy();
+      expect(result.newCardDecks.deck2.cards.map((card) => card.rank)).toEqual([
+        10, 9, 8, 7,
+      ]);
     });
 
-    it('should dont be drag when moved deck is not continue of destination deck', () => {
+    it('should not move stack when suits do not match', () => {
       const cardDecks = {
         deck1: {
-          cards: [7, 13, 11, 13, 11],
-          visibleCardCount: 1,
+          cards: [
+            createCard(9, 'hearts', 0),
+            createCard(8, 'hearts', 0),
+          ],
+          visibleCardCount: 2,
         },
         deck2: {
-          cards: [12, 6, 3, 2, 5, 11],
+          cards: [createCard(10, 'spades', 0)],
           visibleCardCount: 1,
         },
       };
       const source = {
-        index: 4,
+        index: 0,
         droppableId: 'deck1',
       };
       const destination = {
-        index: 6,
+        index: cardDecks.deck2.cards.length,
         droppableId: 'deck2',
       };
 
       const result = moveCards(cardDecks, source, destination);
 
       expect(result.isDragSuccessful).toBeFalsy();
+      expect(result.newCardDecks.deck2.cards).toHaveLength(1);
     });
   });
 
   describe('deal()', () => {
-    it('should added one card to decks', () => {
+    it('should add one card to each deck when dealing is allowed', () => {
       const cardDecks = {
         deck1: {
-          cards: [7, 13, 11, 13, 12],
+          cards: [createCard(9, 'spades', 0)],
           visibleCardCount: 1,
         },
         deck2: {
-          cards: [12, 6, 3, 2, 5, 11],
+          cards: [createCard(10, 'spades', 0)],
           visibleCardCount: 1,
         },
       };
 
       const dealingCards = [
-        [5, 7],
-        [1, 8],
+        [createCard(8, 'spades', 1), createCard(7, 'spades', 1)],
       ];
 
-      const newCardDecks = deal(cardDecks, dealingCards);
+      const [newDecks] = deal(cardDecks, dealingCards);
 
-      Object.keys(newCardDecks[0]).forEach((deckId) => {
-        expect(newCardDecks[0]).not.toEqual(cardDecks[deckId]);
-      });
+      expect(newDecks.deck1.cards).toHaveLength(2);
+      expect(newDecks.deck2.cards).toHaveLength(2);
     });
   });
 
@@ -141,26 +223,41 @@ describe('cardUtils', () => {
   });
 
   describe('getIndexWhichNextCardsDraggable()', () => {
-    it('should return initial decks', () => {
+    it('should return first index of descending suited run', () => {
       const deck = {
-        cards: [2, 7, 4, 9, 2, 1, 2, 3],
-        visibleCardCount: 5,
+        cards: [
+          createCard(12, 'spades', 0),
+          createCard(11, 'spades', 0),
+          createCard(10, 'spades', 0),
+          createCard(9, 'hearts', 0),
+          createCard(8, 'hearts', 0),
+        ],
+        visibleCardCount: 4,
       };
 
-      expect(getIndexWhichNextCardsDraggable(deck)).toBe(5);
+      expect(getIndexWhichNextCardsDraggable(deck)).toBe(3);
     });
   });
 
   describe('getOrderedCardListsFromDecks()', () => {
-    it('should return ordered cards from decks', () => {
+    it('should return ordered card lists from decks', () => {
       const cardDecks = {
         deck1: {
-          cards: [7, 13, 11, 10, 11, 12],
-          visibleCardCount: 6,
+          cards: [
+            createCard(12, 'spades', 0),
+            createCard(11, 'spades', 0),
+            createCard(10, 'spades', 0),
+            createCard(9, 'spades', 0),
+          ],
+          visibleCardCount: 4,
         },
         deck2: {
-          cards: [12, 6, 3, 2, 5, 6],
-          visibleCardCount: 6,
+          cards: [
+            createCard(7, 'hearts', 0),
+            createCard(6, 'hearts', 0),
+            createCard(5, 'hearts', 0),
+          ],
+          visibleCardCount: 3,
         },
       };
 
@@ -169,16 +266,12 @@ describe('cardUtils', () => {
 
       expect(orderedCardLists).toEqual([
         {
-          cards: [10, 11, 12],
-          startingIndex: getIndexWhichNextCardsDraggable(
-            cardDecks.deck1
-          ),
+          cards: cardDecks.deck1.cards,
+          startingIndex: 0,
         },
         {
-          cards: [5, 6],
-          startingIndex: getIndexWhichNextCardsDraggable(
-            cardDecks.deck2
-          ),
+          cards: cardDecks.deck2.cards,
+          startingIndex: 0,
         },
       ]);
     });
@@ -187,26 +280,42 @@ describe('cardUtils', () => {
   describe('getHint()', () => {
     it('should return undefined if no hint', () => {
       const cardDecks = {
-        deck1: { cards: [3, 4, 2, 1, 13, 6], visibleCardCount: 1 },
-        deck2: { cards: [1, 12, 2, 8, 3, 2], visibleCardCount: 1 },
+        deck1: {
+          cards: [
+            createCard(9, 'spades', 0),
+            createCard(8, 'spades', 0),
+          ],
+          visibleCardCount: 2,
+        },
+        deck2: {
+          cards: [createCard(7, 'hearts', 0)],
+          visibleCardCount: 1,
+        },
       };
 
       expect(getHint(cardDecks)).toBeUndefined();
     });
-    /* 
-    it('should return hints if any', () => {
+
+    it('should return a hint when a valid move exists', () => {
       const cardDecks = {
         deck1: {
-          cards: [7, 9],
-          visibleCardCount: 1,
+          cards: [
+            createCard(9, 'spades', 0),
+            createCard(8, 'spades', 0),
+          ],
+          visibleCardCount: 2,
         },
         deck2: {
-          cards: [11, 12],
+          cards: [createCard(10, 'spades', 0)],
           visibleCardCount: 1,
         },
       };
 
-      expect(getHint(cardDecks)).not.toBeUndefined();
-    }); */
+      const hint = getHint(cardDecks);
+
+      expect(hint).toBeDefined();
+      expect(hint.sourceDeckId).toBe('deck1');
+      expect(hint.destinationDeckId).toBe('deck2');
+    });
   });
 });

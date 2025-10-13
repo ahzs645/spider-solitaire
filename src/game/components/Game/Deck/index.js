@@ -1,6 +1,6 @@
 // Libraries
 import React, { useContext } from 'react';
-import { Droppable } from 'react-beautiful-dnd';
+import { useDroppable } from '@dnd-kit/core';
 // Components | Utils
 import { DraggingContext } from '../../../contexts/DraggingContext';
 import { HintContext } from '../../../contexts/HintContext';
@@ -14,6 +14,10 @@ const Deck = (props) => {
 
   const { indicesOfSelectedCards } = useContext(DraggingContext);
   const { hint } = useContext(HintContext);
+
+  const { setNodeRef } = useDroppable({
+    id: `deck${deckNo}`,
+  });
 
   let indexWhichNextCardsDraggable;
 
@@ -30,51 +34,45 @@ const Deck = (props) => {
 
   return (
     'cards' in deck && (
-      <Droppable droppableId={`deck${deckNo}`}>
-        {(provided) => (
-          <Styled.Deck
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-            deckLength={deck.cards.length}
-          >
-            <Styled.Placeholder>
-              <svg data-testid="deneme" viewBox="0 0 71 96" />
-            </Styled.Placeholder>
-            {deck.cards.map((value, index) => {
-              return (
-                <Card
-                  key={`deck${deckNo}${index}`}
-                  index={index}
-                  deckNo={deckNo}
-                  cardNo={value}
-                  isClose={
-                    index < deck.cards.length - deck.visibleCardCount
-                  }
-                  isDragDisabled={
-                    index < indexWhichNextCardsDraggable
-                  }
-                  isInSelectedCards={
-                    indicesOfSelectedCards.deckId ===
-                      `deck${deckNo}` &&
-                    indicesOfSelectedCards.items
-                      .slice(1)
-                      .includes(index)
-                  }
-                  isDestinationInHint={
-                    hint.destinationDeckId === `deck${deckNo}` &&
-                    hint.destinationStartingIndex <= index
-                  }
-                  isSourceInHint={
-                    hint.sourceDeckId === `deck${deckNo}` &&
-                    hint.sourceStartingIndex <= index
-                  }
-                />
-              );
-            })}
-            {provided.placeholder}
-          </Styled.Deck>
-        )}
-      </Droppable>
+      <Styled.Deck
+        ref={setNodeRef}
+        deckLength={deck.cards.length}
+      >
+        <Styled.Placeholder>
+          <svg data-testid="deneme" viewBox="0 0 71 96" />
+        </Styled.Placeholder>
+        {deck.cards.map((value, index) => {
+          return (
+            <Card
+              key={value?.id ?? `deck${deckNo}${index}`}
+              index={index}
+              deckNo={deckNo}
+              card={value}
+              isClose={
+                index < deck.cards.length - deck.visibleCardCount
+              }
+              isDragDisabled={
+                index < indexWhichNextCardsDraggable
+              }
+              isInSelectedCards={
+                indicesOfSelectedCards.deckId ===
+                  `deck${deckNo}` &&
+                indicesOfSelectedCards.items
+                  .slice(1)
+                  .includes(index)
+              }
+              isDestinationInHint={
+                hint.destinationDeckId === `deck${deckNo}` &&
+                hint.destinationStartingIndex <= index
+              }
+              isSourceInHint={
+                hint.sourceDeckId === `deck${deckNo}` &&
+                hint.sourceStartingIndex <= index
+              }
+            />
+          );
+        })}
+      </Styled.Deck>
     )
   );
 };

@@ -9,7 +9,6 @@
     "prettier",
     "plugin:jest/recommended"
   ],
-  "parser": "babel-eslint",
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true

@@ -39,8 +39,6 @@ npm install
 npm start
 ```
 
-> **Note:** When using newer Node versions (v17+), run the dev server with `NODE_OPTIONS=--openssl-legacy-provider` to avoid the known OpenSSL issue: `NODE_OPTIONS=--openssl-legacy-provider npm start`.
-
 ## Test Project
 
 To run unit tests you can run the following lines:

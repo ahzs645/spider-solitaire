@@ -1,83 +1,337 @@
-import CardBackImage from '../../assets/images/cards/card-back.webp';
-import CardImage1 from '../../assets/images/cards/1.webp';
-import CardImage2 from '../../assets/images/cards/2.webp';
-import CardImage3 from '../../assets/images/cards/3.webp';
-import CardImage4 from '../../assets/images/cards/4.webp';
-import CardImage5 from '../../assets/images/cards/5.webp';
-import CardImage6 from '../../assets/images/cards/6.webp';
-import CardImage7 from '../../assets/images/cards/7.webp';
-import CardImage8 from '../../assets/images/cards/8.webp';
-import CardImage9 from '../../assets/images/cards/9.webp';
-import CardImage10 from '../../assets/images/cards/10.webp';
-import CardImage11 from '../../assets/images/cards/11.webp';
-import CardImage12 from '../../assets/images/cards/12.webp';
-import CardImage13 from '../../assets/images/cards/13.webp';
+import AceClubs from '../../assets/images/cards/new/Ace_Clubs.png';
+import AceClubsInverse from '../../assets/images/cards/new/Ace_Clubs_Inverse.png';
+import AceDiamonds from '../../assets/images/cards/new/Ace_Diamonds.png';
+import AceDiamondsInverse from '../../assets/images/cards/new/Ace_Diamonds_Inverse.png';
+import AceHearts from '../../assets/images/cards/new/Ace_Hearts.png';
+import AceHeartsInverse from '../../assets/images/cards/new/Ace_Hearts_Inverse.png';
+import AceSpades from '../../assets/images/cards/new/Ace_Spades.png';
+import AceSpadesInverse from '../../assets/images/cards/new/Ace_Spades_Inverse.png';
+import TwoClubs from '../../assets/images/cards/new/2_Clubs.png';
+import TwoClubsInverse from '../../assets/images/cards/new/2_Clubs_Inverse.png';
+import TwoDiamonds from '../../assets/images/cards/new/2_Diamonds.png';
+import TwoDiamondsInverse from '../../assets/images/cards/new/2_Diamonds_Inverse.png';
+import TwoHearts from '../../assets/images/cards/new/2_Hearts.png';
+import TwoHeartsInverse from '../../assets/images/cards/new/2_Hearts_Inverse.png';
+import TwoSpades from '../../assets/images/cards/new/2_Spades.png';
+import TwoSpadesInverse from '../../assets/images/cards/new/2_Spades_Inverse.png';
+import ThreeClubs from '../../assets/images/cards/new/3_Clubs.png';
+import ThreeClubsInverse from '../../assets/images/cards/new/3_Clubs_Inverse.png';
+import ThreeDiamonds from '../../assets/images/cards/new/3_Diamonds.png';
+import ThreeDiamondsInverse from '../../assets/images/cards/new/3_Diamonds_Inverse.png';
+import ThreeHearts from '../../assets/images/cards/new/3_Hearts.png';
+import ThreeHeartsInverse from '../../assets/images/cards/new/3_Hearts_Inverse.png';
+import ThreeSpades from '../../assets/images/cards/new/3_Spades.png';
+import ThreeSpadesInverse from '../../assets/images/cards/new/3_Spades_Inverse.png';
+import FourClubs from '../../assets/images/cards/new/4_Clubs.png';
+import FourClubsInverse from '../../assets/images/cards/new/4_Clubs_Inverse.png';
+import FourDiamonds from '../../assets/images/cards/new/4_Diamonds.png';
+import FourDiamondsInverse from '../../assets/images/cards/new/4_Diamonds_Inverse.png';
+import FourHearts from '../../assets/images/cards/new/4_Hearts.png';
+import FourHeartsInverse from '../../assets/images/cards/new/4_Hearts_Inverse.png';
+import FourSpades from '../../assets/images/cards/new/4_Spades.png';
+import FourSpadesInverse from '../../assets/images/cards/new/4_Spades_Inverse.png';
+import FiveClubs from '../../assets/images/cards/new/5_Clubs.png';
+import FiveClubsInverse from '../../assets/images/cards/new/5_Clubs_Inverse.png';
+import FiveDiamonds from '../../assets/images/cards/new/5_Diamonds.png';
+import FiveDiamondsInverse from '../../assets/images/cards/new/5_Diamonds_Inverse.png';
+import FiveHearts from '../../assets/images/cards/new/5_Hearts.png';
+import FiveHeartsInverse from '../../assets/images/cards/new/5_Hearts_Inverse.png';
+import FiveSpades from '../../assets/images/cards/new/5_Spades.png';
+import FiveSpadesInverse from '../../assets/images/cards/new/5_Spades_Inverse.png';
+import SixClubs from '../../assets/images/cards/new/6_Clubs.png';
+import SixClubsInverse from '../../assets/images/cards/new/6_Clubs_Inverse.png';
+import SixDiamonds from '../../assets/images/cards/new/6_Diamonds.png';
+import SixDiamondsInverse from '../../assets/images/cards/new/6_Diamonds_Inverse.png';
+import SixHearts from '../../assets/images/cards/new/6_Hearts.png';
+import SixHeartsInverse from '../../assets/images/cards/new/6_Hearts_Inverse.png';
+import SixSpades from '../../assets/images/cards/new/6_Spades.png';
+import SixSpadesInverse from '../../assets/images/cards/new/6_Spades_Inverse.png';
+import SevenClubs from '../../assets/images/cards/new/7_Clubs.png';
+import SevenClubsInverse from '../../assets/images/cards/new/7_Clubs_Inverse.png';
+import SevenDiamonds from '../../assets/images/cards/new/7_Diamonds.png';
+import SevenDiamondsInverse from '../../assets/images/cards/new/7_Diamonds_Inverse.png';
+import SevenHearts from '../../assets/images/cards/new/7_Hearts.png';
+import SevenHeartsInverse from '../../assets/images/cards/new/7_Hearts_Inverse.png';
+import SevenSpades from '../../assets/images/cards/new/7_Spades.png';
+import SevenSpadesInverse from '../../assets/images/cards/new/7_Spades_Inverse.png';
+import EightClubs from '../../assets/images/cards/new/8_Clubs.png';
+import EightClubsInverse from '../../assets/images/cards/new/8_Clubs_Inverse.png';
+import EightDiamonds from '../../assets/images/cards/new/8_Diamonds.png';
+import EightDiamondsInverse from '../../assets/images/cards/new/8_Diamonds_Inverse.png';
+import EightHearts from '../../assets/images/cards/new/8_Hearts.png';
+import EightHeartsInverse from '../../assets/images/cards/new/8_Hearts_Inverse.png';
+import EightSpades from '../../assets/images/cards/new/8_Spades.png';
+import EightSpadesInverse from '../../assets/images/cards/new/8_Spades_Inverse.png';
+import NineClubs from '../../assets/images/cards/new/9_Clubs.png';
+import NineClubsInverse from '../../assets/images/cards/new/9_Clubs_Inverse.png';
+import NineDiamonds from '../../assets/images/cards/new/9_Diamonds.png';
+import NineDiamondsInverse from '../../assets/images/cards/new/9_Diamonds_Inverse.png';
+import NineHearts from '../../assets/images/cards/new/9_Hearts.png';
+import NineHeartsInverse from '../../assets/images/cards/new/9_Hearts_Inverse.png';
+import NineSpades from '../../assets/images/cards/new/9_Spades.png';
+import NineSpadesInverse from '../../assets/images/cards/new/9_Spades_Inverse.png';
+import TenClubs from '../../assets/images/cards/new/10_Clubs.png';
+import TenClubsInverse from '../../assets/images/cards/new/10_Clubs_Inverse.png';
+import TenDiamonds from '../../assets/images/cards/new/10_Diamonds.png';
+import TenDiamondsInverse from '../../assets/images/cards/new/10_Diamonds_Inverse.png';
+import TenHearts from '../../assets/images/cards/new/10_Hearts.png';
+import TenHeartsInverse from '../../assets/images/cards/new/10_Hearts_Inverse.png';
+import TenSpades from '../../assets/images/cards/new/10_Spades.png';
+import TenSpadesInverse from '../../assets/images/cards/new/10_Spades_Inverse.png';
+import JackClubs from '../../assets/images/cards/new/Jack_Clubs.png';
+import JackClubsInverse from '../../assets/images/cards/new/Jack_Clubs_Inverse.png';
+import JackDiamonds from '../../assets/images/cards/new/Jack_Diamonds.png';
+import JackDiamondsInverse from '../../assets/images/cards/new/Jack_Diamonds_Inverse.png';
+import JackHearts from '../../assets/images/cards/new/Jack_Hearts.png';
+import JackHeartsInverse from '../../assets/images/cards/new/Jack_Hearts_Inverse.png';
+import JackSpades from '../../assets/images/cards/new/Jack_Spades.png';
+import JackSpadesInverse from '../../assets/images/cards/new/Jack_Spades_Inverse.png';
+import QueenClubs from '../../assets/images/cards/new/Queen_Clubs.png';
+import QueenClubsInverse from '../../assets/images/cards/new/Queen_Clubs_Inverse.png';
+import QueenDiamonds from '../../assets/images/cards/new/Queen_Diamonds.png';
+import QueenDiamondsInverse from '../../assets/images/cards/new/Queen_Diamonds_Inverse.png';
+import QueenHearts from '../../assets/images/cards/new/Queen_Hearts.png';
+import QueenHeartsInverse from '../../assets/images/cards/new/Queen_Hearts_Inverse.png';
+import QueenSpades from '../../assets/images/cards/new/Queen_Spades.png';
+import QueenSpadesInverse from '../../assets/images/cards/new/Queen_Spades_Inverse.png';
+import KingClubs from '../../assets/images/cards/new/King_Clubs.png';
+import KingClubsInverse from '../../assets/images/cards/new/King_Clubs_Inverse.png';
+import KingDiamonds from '../../assets/images/cards/new/King_Diamonds.png';
+import KingDiamondsInverse from '../../assets/images/cards/new/King_Diamonds_Inverse.png';
+import KingHearts from '../../assets/images/cards/new/King_Hearts.png';
+import KingHeartsInverse from '../../assets/images/cards/new/King_Hearts_Inverse.png';
+import KingSpades from '../../assets/images/cards/new/King_Spades.png';
+import KingSpadesInverse from '../../assets/images/cards/new/King_Spades_Inverse.png';
+import CardBackSpider from '../../assets/images/cards/new/Card_Back_Spider.png';
 
-/*
-  ====================================================
-  Paths of images of cards
-  ====================================================
-*/
+export const cardBackImage = CardBackSpider;
 
-export const cardImages = {
-  0: CardBackImage,
-  1: CardImage1,
-  2: CardImage2,
-  3: CardImage3,
-  4: CardImage4,
-  5: CardImage5,
-  6: CardImage6,
-  7: CardImage7,
-  8: CardImage8,
-  9: CardImage9,
-  10: CardImage10,
-  11: CardImage11,
-  12: CardImage12,
-  13: CardImage13,
+const clubsFaceAssets = {
+  Ace: AceClubs,
+  Two: TwoClubs,
+  Three: ThreeClubs,
+  Four: FourClubs,
+  Five: FiveClubs,
+  Six: SixClubs,
+  Seven: SevenClubs,
+  Eight: EightClubs,
+  Nine: NineClubs,
+  Ten: TenClubs,
+  Jack: JackClubs,
+  Queen: QueenClubs,
+  King: KingClubs,
 };
 
-export const cardNo = {
-  back: 0,
-  ace: 1,
-  two: 2,
-  three: 3,
-  four: 4,
-  five: 5,
-  siv: 6,
-  seven: 7,
-  eight: 8,
-  nine: 9,
-  ten: 10,
-  jack: 11,
-  queen: 12,
-  king: 13,
+const clubsInverseAssets = {
+  Ace: AceClubsInverse,
+  Two: TwoClubsInverse,
+  Three: ThreeClubsInverse,
+  Four: FourClubsInverse,
+  Five: FiveClubsInverse,
+  Six: SixClubsInverse,
+  Seven: SevenClubsInverse,
+  Eight: EightClubsInverse,
+  Nine: NineClubsInverse,
+  Ten: TenClubsInverse,
+  Jack: JackClubsInverse,
+  Queen: QueenClubsInverse,
+  King: KingClubsInverse,
 };
 
-export const cardCounts = {
-  ace: 8,
-  two: 8,
-  three: 8,
-  four: 8,
-  five: 8,
-  siv: 8,
-  seven: 8,
-  eight: 8,
-  nine: 8,
-  ten: 8,
-  jack: 8,
-  queen: 8,
-  king: 8,
+const diamondsFaceAssets = {
+  Ace: AceDiamonds,
+  Two: TwoDiamonds,
+  Three: ThreeDiamonds,
+  Four: FourDiamonds,
+  Five: FiveDiamonds,
+  Six: SixDiamonds,
+  Seven: SevenDiamonds,
+  Eight: EightDiamonds,
+  Nine: NineDiamonds,
+  Ten: TenDiamonds,
+  Jack: JackDiamonds,
+  Queen: QueenDiamonds,
+  King: KingDiamonds,
 };
 
-/*
-  ====================================================
-  Get index by card name
-  Return value: Integer
-  ====================================================
-*/
+const diamondsInverseAssets = {
+  Ace: AceDiamondsInverse,
+  Two: TwoDiamondsInverse,
+  Three: ThreeDiamondsInverse,
+  Four: FourDiamondsInverse,
+  Five: FiveDiamondsInverse,
+  Six: SixDiamondsInverse,
+  Seven: SevenDiamondsInverse,
+  Eight: EightDiamondsInverse,
+  Nine: NineDiamondsInverse,
+  Ten: TenDiamondsInverse,
+  Jack: JackDiamondsInverse,
+  Queen: QueenDiamondsInverse,
+  King: KingDiamondsInverse,
+};
+
+const heartsFaceAssets = {
+  Ace: AceHearts,
+  Two: TwoHearts,
+  Three: ThreeHearts,
+  Four: FourHearts,
+  Five: FiveHearts,
+  Six: SixHearts,
+  Seven: SevenHearts,
+  Eight: EightHearts,
+  Nine: NineHearts,
+  Ten: TenHearts,
+  Jack: JackHearts,
+  Queen: QueenHearts,
+  King: KingHearts,
+};
+
+const heartsInverseAssets = {
+  Ace: AceHeartsInverse,
+  Two: TwoHeartsInverse,
+  Three: ThreeHeartsInverse,
+  Four: FourHeartsInverse,
+  Five: FiveHeartsInverse,
+  Six: SixHeartsInverse,
+  Seven: SevenHeartsInverse,
+  Eight: EightHeartsInverse,
+  Nine: NineHeartsInverse,
+  Ten: TenHeartsInverse,
+  Jack: JackHeartsInverse,
+  Queen: QueenHeartsInverse,
+  King: KingHeartsInverse,
+};
+
+const spadesFaceAssets = {
+  Ace: AceSpades,
+  Two: TwoSpades,
+  Three: ThreeSpades,
+  Four: FourSpades,
+  Five: FiveSpades,
+  Six: SixSpades,
+  Seven: SevenSpades,
+  Eight: EightSpades,
+  Nine: NineSpades,
+  Ten: TenSpades,
+  Jack: JackSpades,
+  Queen: QueenSpades,
+  King: KingSpades,
+};
+
+const spadesInverseAssets = {
+  Ace: AceSpadesInverse,
+  Two: TwoSpadesInverse,
+  Three: ThreeSpadesInverse,
+  Four: FourSpadesInverse,
+  Five: FiveSpadesInverse,
+  Six: SixSpadesInverse,
+  Seven: SevenSpadesInverse,
+  Eight: EightSpadesInverse,
+  Nine: NineSpadesInverse,
+  Ten: TenSpadesInverse,
+  Jack: JackSpadesInverse,
+  Queen: QueenSpadesInverse,
+  King: KingSpadesInverse,
+};
+
+const FACE_CARD_ASSETS = {
+  clubs: clubsFaceAssets,
+  diamonds: diamondsFaceAssets,
+  hearts: heartsFaceAssets,
+  spades: spadesFaceAssets,
+};
+
+const INVERSE_CARD_ASSETS = {
+  clubs: clubsInverseAssets,
+  diamonds: diamondsInverseAssets,
+  hearts: heartsInverseAssets,
+  spades: spadesInverseAssets,
+};
+
+export const CARD_SUITS = ['spades', 'hearts', 'clubs', 'diamonds'];
+export const COPIES_PER_SUIT = 2;
+
+const CARD_RANKS = [
+  { key: 'ace', value: 1, label: 'A', assetKey: 'Ace' },
+  { key: 'two', value: 2, label: '2', assetKey: 'Two' },
+  { key: 'three', value: 3, label: '3', assetKey: 'Three' },
+  { key: 'four', value: 4, label: '4', assetKey: 'Four' },
+  { key: 'five', value: 5, label: '5', assetKey: 'Five' },
+  { key: 'six', value: 6, label: '6', assetKey: 'Six' },
+  { key: 'seven', value: 7, label: '7', assetKey: 'Seven' },
+  { key: 'eight', value: 8, label: '8', assetKey: 'Eight' },
+  { key: 'nine', value: 9, label: '9', assetKey: 'Nine' },
+  { key: 'ten', value: 10, label: '10', assetKey: 'Ten' },
+  { key: 'jack', value: 11, label: 'J', assetKey: 'Jack' },
+  { key: 'queen', value: 12, label: 'Q', assetKey: 'Queen' },
+  { key: 'king', value: 13, label: 'K', assetKey: 'King' },
+];
+
+export const cardNo = CARD_RANKS.reduce((accumulator, rank) => {
+  accumulator[rank.key] = rank.value;
+  return accumulator;
+}, {});
+
+export const cardCounts = CARD_RANKS.reduce((accumulator, rank) => {
+  accumulator[rank.key] = CARD_SUITS.length * COPIES_PER_SUIT;
+  return accumulator;
+}, {});
+
+const buildCardImageMap = (assetsBySuit) => {
+  return CARD_SUITS.reduce((accumulator, suit) => {
+    accumulator[suit] = {};
+    CARD_RANKS.forEach(({ value, assetKey }) => {
+      accumulator[suit][value] = assetsBySuit[suit][assetKey];
+    });
+    return accumulator;
+  }, {});
+};
+
+export const cardImages = buildCardImageMap(FACE_CARD_ASSETS);
+export const cardInverseImages = buildCardImageMap(
+  INVERSE_CARD_ASSETS
+);
 
 export const getCardNo = (name) => {
   return cardNo[name];
+};
+
+export const getRankLabel = (rank) => {
+  const match = CARD_RANKS.find((item) => item.value === rank);
+  return match ? match.label : `${rank}`;
+};
+
+const SUIT_SYMBOLS = {
+  spades: '♠',
+  hearts: '♥',
+  clubs: '♣',
+  diamonds: '♦',
+};
+
+export const getSuitSymbol = (suit) => {
+  return SUIT_SYMBOLS[suit] || '?';
+};
+
+export const isRedSuit = (suit) => {
+  return suit === 'hearts' || suit === 'diamonds';
+};
+
+const generateFullDeck = () => {
+  const deck = [];
+
+  CARD_SUITS.forEach((suit) => {
+    for (let copy = 0; copy < COPIES_PER_SUIT; copy += 1) {
+      CARD_RANKS.forEach((rank) => {
+        deck.push({
+          id: `${suit}-${rank.value}-${copy}`,
+          suit,
+          rank: rank.value,
+        });
+      });
+    }
+  });
+
+  return deck;
 };
 
 /*
@@ -97,6 +351,26 @@ export const shuffle = (array) => {
   return copyArray;
 };
 
+const isDescendingRun = (cards) => {
+  if (cards.length === 0) {
+    return false;
+  }
+
+  for (let i = 1; i < cards.length; i += 1) {
+    const previous = cards[i - 1];
+    const current = cards[i];
+
+    if (
+      previous.suit !== current.suit ||
+      previous.rank !== current.rank + 1
+    ) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
 /*
   ====================================================
   Checks if there is a completed card sequence in the deck.
@@ -105,8 +379,28 @@ export const shuffle = (array) => {
 */
 
 export const checkCompletedDeck = (cards) => {
-  const completedDeck = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
-  return cards.join().includes(completedDeck.join());
+  if (cards.length < 13) {
+    return false;
+  }
+
+  const candidate = cards.slice(-13);
+
+  if (
+    candidate[0].rank !== 13 ||
+    candidate[candidate.length - 1].rank !== 1
+  ) {
+    return false;
+  }
+
+  return isDescendingRun(candidate);
+};
+
+const getClampedVisibleCardCount = (deck) => {
+  if (deck.cards.length === 0) {
+    return 0;
+  }
+
+  return Math.min(deck.visibleCardCount, deck.cards.length);
 };
 
 /*
@@ -130,33 +424,45 @@ export const moveCards = (cardDecks, source, destination) => {
   // The drag card and the cards below it.
   const selectedCardList = sourceDeck.cards.splice(sourceCardIndex);
 
-  // The card above the dragged card.
-  const parentCardNo =
+  const parentCard =
     destinationDeck.cards[destinationCardIndex - 1];
 
-  // Is the cards a continuation of the card from which it was carried?
-  const isNextCard =
+  const canStackOnDestination =
     destinationCardIndex === 0 ||
-    selectedCardList[0] === parentCardNo + 1;
+    (parentCard &&
+      selectedCardList[0] &&
+      parentCard.suit === selectedCardList[0].suit &&
+      parentCard.rank === selectedCardList[0].rank + 1);
+
+  const canMoveStack =
+    selectedCardList.length > 0 && isDescendingRun(selectedCardList);
 
   let isDragSuccessful = false;
 
-  if (isNextCard) {
+  if (canStackOnDestination && canMoveStack) {
     destinationDeck.cards.push(...selectedCardList);
     isDragSuccessful = true;
 
-    // Subtract the number of cards moved from the number of visible cards in the deck.
-    // If the entire deck is being moved, open the last card.
-    if (sourceDeck.visibleCardCount === selectedCardList.length) {
+    if (sourceDeck.cards.length === 0) {
+      sourceDeck.visibleCardCount = 0;
+    } else if (
+      sourceDeck.visibleCardCount === selectedCardList.length
+    ) {
       sourceDeck.visibleCardCount = 1;
     } else {
       sourceDeck.visibleCardCount -= selectedCardList.length;
     }
+
     destinationDeck.visibleCardCount += selectedCardList.length;
   } else {
     // If the drag fails, put the cards back.
     sourceDeck.cards.push(...selectedCardList);
   }
+
+  sourceDeck.visibleCardCount =
+    getClampedVisibleCardCount(sourceDeck);
+  destinationDeck.visibleCardCount =
+    getClampedVisibleCardCount(destinationDeck);
 
   // Check if there is a completed deck as a result of drag.
   const isThereACompletedDeck = checkCompletedDeck(
@@ -165,8 +471,14 @@ export const moveCards = (cardDecks, source, destination) => {
 
   if (isThereACompletedDeck) {
     destinationDeck.cards.splice(-13);
-    destinationDeck.visibleCardCount -=
+    const deduction =
       destinationDeck.visibleCardCount === 13 ? 12 : 13;
+    destinationDeck.visibleCardCount = Math.max(
+      0,
+      destinationDeck.visibleCardCount - deduction
+    );
+    destinationDeck.visibleCardCount =
+      getClampedVisibleCardCount(destinationDeck);
   }
 
   return {
@@ -190,11 +502,11 @@ export const moveCards = (cardDecks, source, destination) => {
 export const deal = (cardDecks, dealingCards, cannotDealSound) => {
   const copyDealingDecks = [...dealingCards];
 
-  const a = Object.values(cardDecks).every(
+  const canDeal = Object.values(cardDecks).every(
     (deck) => deck.cards.length > 0
   );
 
-  if (a) {
+  if (canDeal) {
     const dealCards = copyDealingDecks.pop();
 
     if (dealCards) {
@@ -202,6 +514,7 @@ export const deal = (cardDecks, dealingCards, cannotDealSound) => {
       Object.entries(cardDecks).forEach(([, deck]) => {
         deck.cards.push(dealCards.shift());
         deck.visibleCardCount += 1;
+        deck.visibleCardCount = getClampedVisibleCardCount(deck);
       });
       /* eslint-enable no-param-reassign */
     }
@@ -220,11 +533,7 @@ export const deal = (cardDecks, dealingCards, cannotDealSound) => {
 */
 
 export const getRandomDecks = () => {
-  const cardList = Object.entries(cardCounts)
-    .map(([cardType, count]) => Array(count).fill(cardNo[cardType]))
-    .flat();
-
-  const shuffledCardList = shuffle(cardList);
+  const shuffledCardList = shuffle(generateFullDeck());
 
   return [
     {
@@ -293,31 +602,35 @@ export const newGame = () => {
 
 /*
   ====================================================
-  Set up new game.
-  Return value: Array
+  Returns the index of the first draggable card in a deck.
+  Return value: Integer
   ====================================================
 */
 
 export const getIndexWhichNextCardsDraggable = (deck) => {
   // Returns the starting index of draggable sequential cards.
-  // Deck: X X X 4 5 6 1 2
-  // Visible Cards Starting Index: 3 => X X X [4] 5 6 1 2
   const visibleCardsStartingIndex =
     deck.cards.length - deck.visibleCardCount;
 
-  let firstIndexOfOrderedCards = visibleCardsStartingIndex;
-  let nextCard;
-  let currentCard;
+  let firstIndexOfOrderedCards = Math.max(
+    visibleCardsStartingIndex,
+    0
+  );
 
   for (
     let i = visibleCardsStartingIndex;
-    i < deck.cards.length;
+    i < deck.cards.length - 1;
     i += 1
   ) {
-    currentCard = deck.cards[i];
-    nextCard = deck.cards[i + 1];
+    const currentCard = deck.cards[i];
+    const nextCard = deck.cards[i + 1];
 
-    if (nextCard && currentCard + 1 !== nextCard) {
+    if (
+      !currentCard ||
+      !nextCard ||
+      currentCard.suit !== nextCard.suit ||
+      currentCard.rank !== nextCard.rank + 1
+    ) {
       firstIndexOfOrderedCards = i + 1;
     }
   }
@@ -336,9 +649,11 @@ export const getOrderedCardListsFromDecks = (cardDecks) => {
   const orderedCardListsFromDecks = [];
 
   Object.entries(cardDecks).forEach(([, deck]) => {
+    const startingIndex = getIndexWhichNextCardsDraggable(deck);
+
     orderedCardListsFromDecks.push({
-      startingIndex: getIndexWhichNextCardsDraggable(deck),
-      cards: deck.cards.slice(getIndexWhichNextCardsDraggable(deck)),
+      startingIndex,
+      cards: deck.cards.slice(startingIndex),
     });
   });
 
@@ -348,7 +663,7 @@ export const getOrderedCardListsFromDecks = (cardDecks) => {
 /*
   ====================================================
   Shows hints of cards that can be played.
-  Return value: Array
+  Return value: Object | undefined
   ====================================================
 */
 
@@ -356,55 +671,40 @@ export const getHint = (cardDecks) => {
   const orderedCardLists = getOrderedCardListsFromDecks(cardDecks);
   const hints = [];
 
-  // For draggable cards of the 10 source decks.
-  for (
-    let sourceDeckNo = 0;
-    sourceDeckNo < orderedCardLists.length;
-    sourceDeckNo += 1
-  ) {
-    const sourceDeck = orderedCardLists[sourceDeckNo];
+  orderedCardLists.forEach((sourceDeck, sourceDeckNo) => {
+    sourceDeck.cards.forEach((card, offset) => {
+      orderedCardLists.forEach(
+        (destinationDeck, destinationDeckNo) => {
+          if (sourceDeckNo === destinationDeckNo) {
+            return;
+          }
 
-    // For sub draggable cards.
-    for (
-      let subSourceDeckStartingIndex = 0;
-      subSourceDeckStartingIndex < sourceDeck.cards.length;
-      subSourceDeckStartingIndex += 1
-    ) {
-      // For destination decks.
-      for (
-        let destinationDeckNo = 0;
-        destinationDeckNo < orderedCardLists.length;
-        destinationDeckNo += 1
-      ) {
-        const destinationDeck = orderedCardLists[destinationDeckNo];
+          const destinationCards = destinationDeck.cards;
 
-        // (a && b && c) || (a && b') = (a && b') || (a && c)
-        // a : the first card of the deck to be dragged must match the last card of destination
-        // b : the parent of the child deck to be dragged must be the same as the parent of the destination
-        // c : the deck containing the sub-deck to be dragged must be shorter than the destination deck
+          if (destinationCards.length === 0) {
+            return;
+          }
 
-        // Note: The reason I use ".slice(-1)[0]" to get the last element is because .at() in JEST throws an error.
-        if (
-          (sourceDeck.cards.slice(subSourceDeckStartingIndex)[0] ===
-            destinationDeck.cards.slice(-1)[0] + 1 &&
-            sourceDeck.cards[subSourceDeckStartingIndex - 1] !==
-              destinationDeck.cards.slice(-1)[0]) ||
-          (sourceDeck.cards.slice(subSourceDeckStartingIndex)[0] ===
-            destinationDeck.cards.slice(-1)[0] + 1 &&
-            destinationDeck.cards.length > subSourceDeckStartingIndex)
-        ) {
-          hints.push({
-            sourceDeckId: `deck${sourceDeckNo + 1}`,
-            destinationDeckId: `deck${destinationDeckNo + 1}`,
-            sourceStartingIndex:
-              sourceDeck.startingIndex + subSourceDeckStartingIndex,
-            destinationStartingIndex: destinationDeck.startingIndex,
-          });
+          const destinationTop =
+            destinationCards[destinationCards.length - 1];
+
+          if (
+            destinationTop.suit === card.suit &&
+            destinationTop.rank === card.rank + 1
+          ) {
+            hints.push({
+              sourceDeckId: `deck${sourceDeckNo + 1}`,
+              destinationDeckId: `deck${destinationDeckNo + 1}`,
+              sourceStartingIndex:
+                sourceDeck.startingIndex + offset,
+              destinationStartingIndex:
+                destinationDeck.startingIndex,
+            });
+          }
         }
-      }
-    }
-  }
+      );
+    });
+  });
 
-  // Mixes hints and randomly picks one
-  return shuffle(hints)[0];
+  return hints.length > 0 ? shuffle(hints)[0] : undefined;
 };
