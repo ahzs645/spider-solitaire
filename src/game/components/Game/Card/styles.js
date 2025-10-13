@@ -4,14 +4,14 @@ import { INITIAL_DEAL_ANIMATION_DURATION } from '../../../contexts/GameContext';
 
 const initialDeal = keyframes`
   0% {
-    transform: translate3d(260px, 260px, 0) rotate(-12deg);
+    transform: translate3d(260px, 260px, 0);
     opacity: 0;
   }
-  50% {
+  30% {
     opacity: 1;
   }
   100% {
-    transform: translate3d(0, 0, 0) rotate(0deg);
+    transform: translate3d(0, 0, 0);
     opacity: 1;
   }
 `;
@@ -25,7 +25,7 @@ export const CardContainer = styled.div`
       animation: ${initialDeal} ${INITIAL_DEAL_ANIMATION_DURATION}ms
         ease-out forwards;
       animation-delay: ${props.$initialDealDelay}ms;
-      transform-origin: 90% 90%;
+      animation-fill-mode: both;
       will-change: transform, opacity;
     `}
 `;

@@ -30,12 +30,7 @@ const buildInitialDealOrder = (decks) => {
   );
 
   for (let round = 0; round < maxHeight; round += 1) {
-    for (
-      let deckIndex = 0;
-      deckIndex < deckList.length;
-      deckIndex += 1
-    ) {
-      const deck = deckList[deckIndex];
+    deckList.forEach((deck) => {
       if (round < deck.cards.length) {
         const card = deck.cards[round];
         if (card) {
@@ -43,7 +38,7 @@ const buildInitialDealOrder = (decks) => {
           order += 1;
         }
       }
-    }
+    });
   }
 
   return orderMap;
