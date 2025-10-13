@@ -54,16 +54,11 @@ function Card(props) {
 
   const [mouseDownSound] = getSounds('mouse-down');
 
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    isDragging,
-  } = useDraggable({
-    id: `deck${deckNo}-${index}`,
-    disabled: isDragDisabled,
-  });
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({
+      id: `deck${deckNo}-${index}`,
+      disabled: isDragDisabled,
+    });
 
   const handleMouseDownFromCard = (e) => {
     e.preventDefault();
