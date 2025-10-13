@@ -12,36 +12,17 @@ import { getRandomDecks } from '../utils/cardUtils';
 
 export const GameContext = createContext();
 
-export const INITIAL_DEAL_ANIMATION_DURATION = 400;
-export const INITIAL_DEAL_ANIMATION_DELAY = 70;
+export const INITIAL_DEAL_ANIMATION_DURATION = 360;
+export const INITIAL_DEAL_ANIMATION_DELAY = 90;
 
-const buildInitialDealOrder = (decks) => {
-  const orderMap = {};
-  let order = 0;
-
-  const deckList = Array.from(
-    { length: 10 },
-    (_, index) => decks[`deck${index + 1}`] || { cards: [] },
-  );
-
-  const maxHeight = Math.max(
-    ...deckList.map((deck) => deck.cards.length),
-    0,
-  );
-
-  for (let round = 0; round < maxHeight; round += 1) {
-    deckList.forEach((deck) => {
-      if (round < deck.cards.length) {
-        const card = deck.cards[round];
-        if (card) {
-          orderMap[card.id] = order;
-          order += 1;
-        }
-      }
-    });
-  }
-
-  return orderMap;
+const getTopCards = (decks) => {
+  return Array.from({ length: 10 }, (_, index) => {
+    const deck = decks[`deck${index + 1}`];
+    if (!deck || deck.cards.length === 0) {
+      return undefined;
+    }
+    return deck.cards[deck.cards.length - 1];
+  }).filter(Boolean);
 };
 
 function GameContextProvider(props) {
@@ -66,28 +47,39 @@ function GameContextProvider(props) {
     score: 500,
     moves: 0,
   });
-  const [initialDealOrder, setInitialDealOrder] = useState({});
-  const [isInitialDealComplete, setIsInitialDealComplete] =
-    useState(true);
+  const [dealAnimationOrder, setDealAnimationOrder] = useState({});
+  const [isDealAnimationRunning, setIsDealAnimationRunning] =
+    useState(false);
   const initialDealTimerRef = useRef(null);
 
-  const scheduleInitialDealFinish = useCallback((cardCount) => {
+  const triggerDealAnimation = useCallback((cards) => {
     if (initialDealTimerRef.current) {
       clearTimeout(initialDealTimerRef.current);
     }
 
-    if (cardCount === 0) {
-      setIsInitialDealComplete(true);
+    if (!cards || cards.length === 0) {
+      setDealAnimationOrder({});
+      setIsDealAnimationRunning(false);
       return;
     }
 
+    const orderMap = {};
+    cards.forEach((card, index) => {
+      if (card) {
+        orderMap[card.id] = index;
+      }
+    });
+
+    setDealAnimationOrder(orderMap);
+    setIsDealAnimationRunning(true);
+
     const totalDelay =
-      cardCount * INITIAL_DEAL_ANIMATION_DELAY +
+      (cards.length - 1) * INITIAL_DEAL_ANIMATION_DELAY +
       INITIAL_DEAL_ANIMATION_DURATION;
 
-    setIsInitialDealComplete(false);
     initialDealTimerRef.current = setTimeout(() => {
-      setIsInitialDealComplete(true);
+      setDealAnimationOrder({});
+      setIsDealAnimationRunning(false);
       initialDealTimerRef.current = null;
     }, totalDelay);
   }, []);
@@ -98,11 +90,10 @@ function GameContextProvider(props) {
       if (newDealingDecks) {
         setDealingDecks(newDealingDecks);
       }
-      const orderMap = buildInitialDealOrder(newCardDecks);
-      setInitialDealOrder(orderMap);
-      scheduleInitialDealFinish(Object.keys(orderMap).length);
+      const topCards = getTopCards(newCardDecks);
+      triggerDealAnimation(topCards);
     },
-    [scheduleInitialDealFinish],
+    [triggerDealAnimation],
   );
 
   /*
@@ -132,18 +123,20 @@ function GameContextProvider(props) {
       setDealingDecks,
       gameStats,
       setGameStats,
-      initialDealOrder,
-      isInitialDealComplete,
+      dealAnimationOrder,
+      isDealAnimationRunning,
       startNewGame,
+      triggerDealAnimation,
     }),
     [
       cardDecks,
       isAnyDragging,
       dealingDecks,
       gameStats,
-      initialDealOrder,
-      isInitialDealComplete,
+      dealAnimationOrder,
+      isDealAnimationRunning,
       startNewGame,
+      triggerDealAnimation,
     ],
   );
 

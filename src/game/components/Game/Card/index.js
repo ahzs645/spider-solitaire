@@ -58,20 +58,20 @@ function Card(props) {
 
   const [mouseDownSound] = getSounds('mouse-down');
 
-  const { initialDealOrder, isInitialDealComplete } =
+  const { dealAnimationOrder, isDealAnimationRunning } =
     useContext(GameContext);
 
   const dealOrder =
-    card && !isInitialDealComplete
-      ? initialDealOrder[card.id]
+    card && isDealAnimationRunning
+      ? dealAnimationOrder[card.id]
       : undefined;
-  const shouldAnimateInitialDeal =
-    typeof dealOrder === 'number' && !isInitialDealComplete;
-  const initialDealDelay = shouldAnimateInitialDeal
+  const shouldAnimateDeal =
+    typeof dealOrder === 'number' && isDealAnimationRunning;
+  const dealAnimationDelay = shouldAnimateDeal
     ? dealOrder * INITIAL_DEAL_ANIMATION_DELAY
     : 0;
 
-  const dragDisabled = isDragDisabled || !isInitialDealComplete;
+  const dragDisabled = isDragDisabled || isDealAnimationRunning;
 
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
@@ -114,7 +114,7 @@ function Card(props) {
       };
     }
 
-    if (shouldAnimateInitialDeal) {
+    if (shouldAnimateDeal) {
       style.zIndex = 1000 + dealOrder;
     }
 
@@ -139,8 +139,8 @@ function Card(props) {
       style={getStyle()}
       {...listeners}
       {...attributes}
-      $initialDealActive={shouldAnimateInitialDeal}
-      $initialDealDelay={initialDealDelay}
+      $initialDealActive={shouldAnimateDeal}
+      $initialDealDelay={dealAnimationDelay}
       onMouseDown={
         !dragDisabled ? handleMouseDownFromCard : undefined
       }
