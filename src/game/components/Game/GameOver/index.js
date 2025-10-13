@@ -6,9 +6,8 @@ import getSounds from '../../../utils/soundUtils';
 // Assets
 import * as Styled from './styles';
 
-const GameOver = (props) => {
-  const { setCardDecks, setDealingDecks, gameStats, setGameStats } =
-    props;
+function GameOver(props) {
+  const { startNewGame, gameStats, setGameStats } = props;
 
   const [winSound] = getSounds('win');
 
@@ -20,7 +19,7 @@ const GameOver = (props) => {
 
   useEffect(() => {
     winSound.play();
-  }, []);
+  }, [winSound]);
 
   /*
   ====================================================
@@ -30,8 +29,7 @@ const GameOver = (props) => {
 
   const handleNewGameClick = () => {
     const [cDecks, dDecks] = newGame();
-    setCardDecks(cDecks);
-    setDealingDecks(dDecks);
+    startNewGame(cDecks, dDecks);
     setGameStats({
       completedDeckCount: 0,
       score: 500,
@@ -71,6 +69,6 @@ const GameOver = (props) => {
       </Styled.Window>
     </>
   );
-};
+}
 
 export default React.memo(GameOver);

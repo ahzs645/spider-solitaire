@@ -1,9 +1,33 @@
 // Libraries
-import styled from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
+import { INITIAL_DEAL_ANIMATION_DURATION } from '../../../contexts/GameContext';
+
+const initialDeal = keyframes`
+  0% {
+    transform: translate3d(260px, 260px, 0) rotate(-12deg);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+    opacity: 1;
+  }
+`;
 
 export const CardContainer = styled.div`
   z-index: 1;
   position: relative;
+  ${(props) =>
+    props.$initialDealActive &&
+    css`
+      animation: ${initialDeal} ${INITIAL_DEAL_ANIMATION_DURATION}ms
+        ease-out forwards;
+      animation-delay: ${props.$initialDealDelay}ms;
+      transform-origin: 90% 90%;
+      will-change: transform, opacity;
+    `}
 `;
 
 export const CardImage = styled.img`

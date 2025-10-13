@@ -7,18 +7,19 @@ import { deal, newGame } from '../../utils/cardUtils';
 // Assets
 import * as Styled from './styles';
 
-const WindowMenu = () => {
+function WindowMenu() {
   const {
     cardDecks,
     setCardDecks,
     dealingDecks,
     setDealingDecks,
     setGameStats,
+    startNewGame,
   } = useContext(GameContext);
 
   const [cannotDealSound, dealSound] = getSounds(
     'cannot-deal',
-    'deal'
+    'deal',
   );
 
   /*
@@ -32,7 +33,7 @@ const WindowMenu = () => {
     const [returnedCardDecks, returnDealingDecks] = deal(
       cardDecks,
       dealingDecks,
-      cannotDealSound
+      cannotDealSound,
     );
     setCardDecks(returnedCardDecks);
     setDealingDecks(returnDealingDecks);
@@ -40,8 +41,7 @@ const WindowMenu = () => {
 
   const handleNewGameClick = () => {
     const [cDecks, dDecks] = newGame();
-    setCardDecks(cDecks);
-    setDealingDecks(dDecks);
+    startNewGame(cDecks, dDecks);
     setGameStats({
       completedDeckCount: 0,
       score: 500,
@@ -75,6 +75,6 @@ const WindowMenu = () => {
       </Styled.MenuItem>
     </Styled.Menu>
   );
-};
+}
 
 export default WindowMenu;

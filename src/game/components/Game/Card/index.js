@@ -1,5 +1,5 @@
 // Libraries
-import React from 'react';
+import React, { useContext } from 'react';
 import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 // Components | Utils
@@ -10,6 +10,10 @@ import {
   getRankLabel,
 } from '../../../utils/cardUtils';
 import getSounds from '../../../utils/soundUtils';
+import {
+  GameContext,
+  INITIAL_DEAL_ANIMATION_DELAY,
+} from '../../../contexts/GameContext';
 // Assets
 import * as Styled from './styles';
 
@@ -54,10 +58,25 @@ function Card(props) {
 
   const [mouseDownSound] = getSounds('mouse-down');
 
+  const { initialDealOrder, isInitialDealComplete } =
+    useContext(GameContext);
+
+  const dealOrder =
+    card && !isInitialDealComplete
+      ? initialDealOrder[card.id]
+      : undefined;
+  const shouldAnimateInitialDeal =
+    typeof dealOrder === 'number' && !isInitialDealComplete;
+  const initialDealDelay = shouldAnimateInitialDeal
+    ? dealOrder * INITIAL_DEAL_ANIMATION_DELAY
+    : 0;
+
+  const dragDisabled = isDragDisabled || !isInitialDealComplete;
+
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
       id: `deck${deckNo}-${index}`,
-      disabled: isDragDisabled,
+      disabled: dragDisabled,
     });
 
   const handleMouseDownFromCard = (e) => {
@@ -95,6 +114,10 @@ function Card(props) {
       };
     }
 
+    if (shouldAnimateInitialDeal) {
+      style.zIndex = 1000 + dealOrder;
+    }
+
     return {
       ...style,
       // We override the "translate(... px)" that performs the sliding behavior as "none".
@@ -116,8 +139,10 @@ function Card(props) {
       style={getStyle()}
       {...listeners}
       {...attributes}
+      $initialDealActive={shouldAnimateInitialDeal}
+      $initialDealDelay={initialDealDelay}
       onMouseDown={
-        !isDragDisabled ? handleMouseDownFromCard : undefined
+        !dragDisabled ? handleMouseDownFromCard : undefined
       }
     >
       <div className="card">

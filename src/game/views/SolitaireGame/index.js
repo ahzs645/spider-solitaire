@@ -13,13 +13,13 @@ import DealArea from '../../components/Game/DealArea';
 // Assets
 import * as Styled from './styles';
 
-const SolitaireGame = () => {
+function SolitaireGame() {
   const {
-    setDealingDecks,
     cardDecks,
     setCardDecks,
     gameStats,
     setGameStats,
+    startNewGame,
   } = useContext(GameContext);
 
   /*
@@ -33,7 +33,7 @@ const SolitaireGame = () => {
       <HintContextProvider>
         <Window title="Spider Solitaire">
           <Styled.Board>
-            <DeckArea cardDecks={cardDecks} />
+            <DeckArea />
             <Styled.BottomArea>
               <CompletedDeckArea
                 completedDeckCount={gameStats.completedDeckCount}
@@ -50,8 +50,7 @@ const SolitaireGame = () => {
             </Styled.BottomArea>
             {gameStats.completedDeckCount === 8 && (
               <GameOver
-                setCardDecks={setCardDecks}
-                setDealingDecks={setDealingDecks}
+                startNewGame={startNewGame}
                 gameStats={gameStats}
                 setGameStats={setGameStats}
               />
@@ -61,6 +60,6 @@ const SolitaireGame = () => {
       </HintContextProvider>
     </DraggingContextProvider>
   );
-};
+}
 
 export default SolitaireGame;
