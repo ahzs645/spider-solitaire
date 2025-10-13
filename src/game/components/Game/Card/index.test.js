@@ -5,9 +5,10 @@ import { GameContext } from '../../../contexts/GameContext';
 
 const renderWithGameContext = (ui, value = {}) => {
   const defaultValue = {
-    initialDealOrder: {},
-    isInitialDealComplete: true,
+    dealAnimationOrder: {},
+    isDealAnimationRunning: false,
     startNewGame: jest.fn(),
+    triggerDealAnimation: jest.fn(),
   };
 
   return render(
