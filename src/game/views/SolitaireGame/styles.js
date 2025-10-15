@@ -2,8 +2,9 @@
 import styled from 'styled-components';
 
 export const Board = styled.div`
-  background-image: url(${`${process.env.PUBLIC_URL}/solitaire-background.webp`});
-  background-size: fill;
+  background-image: url(${`${process.env.PUBLIC_URL}/felt.png`});
+  background-repeat: repeat;
+  background-size: auto;
   display: grid;
   grid-template-rows: 1fr 50px;
   height: 100%;

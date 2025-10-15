@@ -1,5 +1,5 @@
 // Libraries
-import React, { useContext } from 'react';
+import React, { useContext, useRef, useState, useEffect } from 'react';
 import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 // Components | Utils
@@ -56,9 +56,11 @@ function Card(props) {
     isDestinationInHint,
   } = props;
 
+  const cardRef = useRef(null);
+  const [animationOffset, setAnimationOffset] = useState({ x: 400, y: 350 });
   const [mouseDownSound] = getSounds('mouse-down');
 
-  const { dealAnimationOrder, isDealAnimationRunning } =
+  const { dealAnimationOrder, isDealAnimationRunning, dealDeckPosition } =
     useContext(GameContext);
 
   const dealOrder =
@@ -78,6 +80,20 @@ function Card(props) {
       id: `deck${deckNo}-${index}`,
       disabled: dragDisabled,
     });
+
+  // Calculate animation offset when deal animation starts
+  useEffect(() => {
+    if (shouldAnimateDeal && cardRef.current && dealDeckPosition.x > 0) {
+      const cardRect = cardRef.current.getBoundingClientRect();
+      const cardCenterX = cardRect.left + cardRect.width / 2;
+      const cardCenterY = cardRect.top + cardRect.height / 2;
+
+      setAnimationOffset({
+        x: dealDeckPosition.x - cardCenterX,
+        y: dealDeckPosition.y - cardCenterY,
+      });
+    }
+  }, [shouldAnimateDeal, dealDeckPosition, cardRef]);
 
   const handleMouseDownFromCard = (e) => {
     e.preventDefault();
@@ -135,12 +151,17 @@ function Card(props) {
 
   return deckNo ? (
     <Styled.CardContainer
-      ref={setNodeRef}
+      ref={(node) => {
+        setNodeRef(node);
+        cardRef.current = node;
+      }}
       style={getStyle()}
       {...listeners}
       {...attributes}
       $initialDealActive={shouldAnimateDeal}
       $initialDealDelay={dealAnimationDelay}
+      $animationOffsetX={animationOffset.x}
+      $animationOffsetY={animationOffset.y}
       onMouseDown={
         !dragDisabled ? handleMouseDownFromCard : undefined
       }

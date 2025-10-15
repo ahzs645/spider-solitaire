@@ -10,6 +10,7 @@ import DeckArea from '../../components/Game/DeckArea';
 import CompletedDeckArea from '../../components/Game/CompletedArea';
 import HintArea from '../../components/Game/HintArea';
 import DealArea from '../../components/Game/DealArea';
+import DifficultyDialog from '../../components/Game/DifficultyDialog';
 // Assets
 import * as Styled from './styles';
 
@@ -20,7 +21,20 @@ function SolitaireGame() {
     gameStats,
     setGameStats,
     startNewGame,
+    showDifficultyDialog,
+    setShowDifficultyDialog,
+    setDifficulty,
   } = useContext(GameContext);
+
+  const handleSelectDifficulty = (selectedDifficulty) => {
+    setDifficulty(selectedDifficulty);
+    setShowDifficultyDialog(false);
+  };
+
+  const handleCancelDifficulty = () => {
+    setShowDifficultyDialog(false);
+    setDifficulty('medium'); // Default to medium if cancelled
+  };
 
   /*
   ====================================================
@@ -31,6 +45,12 @@ function SolitaireGame() {
   return (
     <DraggingContextProvider>
       <HintContextProvider>
+        {showDifficultyDialog && (
+          <DifficultyDialog
+            onSelectDifficulty={handleSelectDifficulty}
+            onCancel={handleCancelDifficulty}
+          />
+        )}
         <Window title="Spider Solitaire">
           <Styled.Board>
             <DeckArea />

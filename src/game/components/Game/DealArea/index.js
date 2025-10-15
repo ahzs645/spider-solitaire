@@ -1,5 +1,5 @@
 // Libraries
-import React, { useContext } from 'react';
+import React, { useContext, useRef, useEffect } from 'react';
 // Components | Utils
 import Card from '../Card';
 import { deal } from '../../../utils/cardUtils';
@@ -10,6 +10,7 @@ import { GameContext } from '../../../contexts/GameContext';
 
 function DealArea(props) {
   const { setCardDecks, cardDecks } = props;
+  const dealAreaRef = useRef(null);
   const [cannotDealSound, dealSound] = getSounds(
     'cannot-deal',
     'deal',
@@ -19,7 +20,27 @@ function DealArea(props) {
     setDealingDecks,
     triggerDealAnimation,
     isDealAnimationRunning,
+    setDealDeckPosition,
   } = useContext(GameContext);
+
+  useEffect(() => {
+    if (dealAreaRef.current) {
+      const updatePosition = () => {
+        const rect = dealAreaRef.current.getBoundingClientRect();
+        setDealDeckPosition({
+          x: rect.left + rect.width / 2,
+          y: rect.top + rect.height / 2,
+        });
+      };
+
+      updatePosition();
+      window.addEventListener('resize', updatePosition);
+
+      return () => {
+        window.removeEventListener('resize', updatePosition);
+      };
+    }
+  }, [setDealDeckPosition]);
   /*
   ====================================================
   =================== HANDLER ========================
@@ -61,6 +82,7 @@ function DealArea(props) {
 
   return (
     <Styled.DealArea
+      ref={dealAreaRef}
       data-cy="deal-area"
       onClick={
         dealingDecks.length && !isDealAnimationRunning

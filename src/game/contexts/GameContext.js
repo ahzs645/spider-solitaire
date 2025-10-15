@@ -50,6 +50,9 @@ function GameContextProvider(props) {
   const [dealAnimationOrder, setDealAnimationOrder] = useState({});
   const [isDealAnimationRunning, setIsDealAnimationRunning] =
     useState(false);
+  const [dealDeckPosition, setDealDeckPosition] = useState({ x: 0, y: 0 });
+  const [difficulty, setDifficulty] = useState(null);
+  const [showDifficultyDialog, setShowDifficultyDialog] = useState(true);
   const initialDealTimerRef = useRef(null);
 
   const triggerDealAnimation = useCallback((cards) => {
@@ -125,6 +128,12 @@ function GameContextProvider(props) {
       setGameStats,
       dealAnimationOrder,
       isDealAnimationRunning,
+      dealDeckPosition,
+      setDealDeckPosition,
+      difficulty,
+      setDifficulty,
+      showDifficultyDialog,
+      setShowDifficultyDialog,
       startNewGame,
       triggerDealAnimation,
     }),
@@ -135,6 +144,9 @@ function GameContextProvider(props) {
       gameStats,
       dealAnimationOrder,
       isDealAnimationRunning,
+      dealDeckPosition,
+      difficulty,
+      showDifficultyDialog,
       startNewGame,
       triggerDealAnimation,
     ],

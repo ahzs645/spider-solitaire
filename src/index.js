@@ -6,6 +6,7 @@ import { ThemeProvider } from 'styled-components';
 import App from './App';
 // Assets
 import './index.scss';
+import 'xp.css/dist/XP.css';
 import { theme } from './globalStyles';
 
 /* eslint-disable no-console */
