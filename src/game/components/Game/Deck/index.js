@@ -36,10 +36,13 @@ const Deck = (props) => {
     'cards' in deck && (
       <Styled.Deck
         ref={setNodeRef}
-        deckLength={deck.cards.length}
+        $deckLength={deck.cards.length}
       >
         <Styled.Placeholder>
-          <svg data-testid="deneme" viewBox="0 0 71 96" />
+          <Styled.EmptyCardImage
+            src={`${process.env.PUBLIC_URL}/Empty_Card.png`}
+            alt="Empty card slot"
+          />
         </Styled.Placeholder>
         {deck.cards.map((value, index) => {
           return (

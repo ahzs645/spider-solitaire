@@ -70,9 +70,7 @@ function SolitaireGame() {
             </Styled.BottomArea>
             {gameStats.completedDeckCount === 8 && (
               <GameOver
-                startNewGame={startNewGame}
                 gameStats={gameStats}
-                setGameStats={setGameStats}
               />
             )}
           </Styled.Board>

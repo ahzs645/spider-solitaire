@@ -89,11 +89,17 @@ function DealArea(props) {
           ? handleDealClick
           : undefined
       }
-      dealingDecksLength={dealingDecks.length}
+      $dealingDecksLength={dealingDecks.length}
     >
-      {React.Children.toArray(
-        Array(dealingDecks.length).fill(<Card isClose />),
-      )}
+      {Array.from({ length: 5 }, (_, index) => {
+        const positionFromRight = 5 - index;
+        const shouldShow = positionFromRight <= dealingDecks.length;
+        return shouldShow ? (
+          <div key={index} className="card" data-position={index + 1}>
+            <Card isClose />
+          </div>
+        ) : null;
+      })}
     </Styled.DealArea>
   );
 }

@@ -176,7 +176,7 @@ const DeckArea = () => {
       <DragOverlay>
         {activeDraggedCards ? (
           <Styled.DragOverlayColumn
-            cardCount={activeDraggedCards.length}
+            $cardCount={activeDraggedCards.length}
           >
             <Styled.DragOverlayPlaceholder />
             {activeDraggedCards.map((card) => (

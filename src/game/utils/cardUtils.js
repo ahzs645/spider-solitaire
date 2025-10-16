@@ -316,11 +316,31 @@ export const isRedSuit = (suit) => {
   return suit === 'hearts' || suit === 'diamonds';
 };
 
-const generateFullDeck = () => {
+const generateFullDeck = (difficulty = 'difficult') => {
   const deck = [];
 
-  CARD_SUITS.forEach((suit) => {
-    for (let copy = 0; copy < COPIES_PER_SUIT; copy += 1) {
+  // Determine which suits to use based on difficulty
+  let suitsToUse;
+  switch (difficulty) {
+    case 'easy':
+      suitsToUse = ['spades'];
+      break;
+    case 'medium':
+      suitsToUse = ['hearts', 'spades'];
+      break;
+    case 'difficult':
+    default:
+      suitsToUse = CARD_SUITS;
+      break;
+  }
+
+  // Calculate how many copies of each suit we need to make 104 cards
+  const totalCardsNeeded = 104;
+  const cardsPerSuit = 13; // Ace through King
+  const totalCopiesNeeded = totalCardsNeeded / (suitsToUse.length * cardsPerSuit);
+
+  suitsToUse.forEach((suit) => {
+    for (let copy = 0; copy < totalCopiesNeeded; copy += 1) {
       CARD_RANKS.forEach((rank) => {
         deck.push({
           id: `${suit}-${rank.value}-${copy}`,
@@ -507,7 +527,7 @@ export const deal = (cardDecks, dealingCards, cannotDealSound) => {
   );
 
   if (canDeal) {
-    const dealCards = copyDealingDecks.pop();
+    const dealCards = copyDealingDecks.shift();
 
     if (dealCards) {
       /* eslint-disable no-param-reassign */
@@ -532,8 +552,8 @@ export const deal = (cardDecks, dealingCards, cannotDealSound) => {
   ====================================================
 */
 
-export const getRandomDecks = () => {
-  const shuffledCardList = shuffle(generateFullDeck());
+export const getRandomDecks = (difficulty = 'difficult') => {
+  const shuffledCardList = shuffle(generateFullDeck(difficulty));
 
   return [
     {

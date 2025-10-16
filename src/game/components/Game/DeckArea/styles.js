@@ -31,7 +31,7 @@ export const CardDeckContainer = styled.div`
 export const DragOverlayColumn = styled.div`
   display: grid;
   grid-template-rows: repeat(
-    ${(props) => props.cardCount + 5},
+    ${(props) => props.$cardCount + 5},
     min(16px, 2.5vw)
   );
   height: fit-content;
@@ -44,7 +44,7 @@ export const DragOverlayColumn = styled.div`
   @media (min-width: ${(props) =>
       props.theme.breakpoints.smallTablet}) {
     grid-template-rows: repeat(
-      ${(props) => props.cardCount + 5},
+      ${(props) => props.$cardCount + 5},
       min(17px, 3vh)
     );
   }

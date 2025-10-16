@@ -4,7 +4,7 @@ import styled from 'styled-components';
 export const Deck = styled.div`
   display: grid;
   grid-template-rows: repeat(
-    ${(props) => props.deckLength + 5},
+    ${(props) => props.$deckLength + 5},
     min(16px, 2.5vw)
   );
   height: fit-content;
@@ -16,7 +16,7 @@ export const Deck = styled.div`
   @media (min-width: ${(props) =>
       props.theme.breakpoints.smallTablet}) {
     grid-template-rows: repeat(
-      ${(props) => props.deckLength + 5},
+      ${(props) => props.$deckLength + 5},
       min(17px, 3vh)
     );
   }
@@ -24,7 +24,6 @@ export const Deck = styled.div`
 
 export const Placeholder = styled.div`
   border-radius: 4px;
-  box-shadow: ${(props) => props.theme.boxShadows.emptyDeck};
   display: grid;
   left: 0;
   position: absolute;
@@ -35,6 +34,15 @@ export const Placeholder = styled.div`
   & > * {
     grid-area: 1/1;
   }
+`;
+
+export const EmptyCardImage = styled.img`
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
 `;
 
 export const CardContainer = styled.div`

@@ -15,35 +15,56 @@ export const Overlay = styled.div`
 `;
 
 export const XPWrapper = styled.div`
-  /* Override the global styles that conflict with XP.css */
+  --sans-serif: 'Tahoma', 'Microsoft Sans Serif', 'Segoe UI', Arial, sans-serif;
+  font-family: var(--sans-serif);
+  font-size: 11px;
+
+  /* Reset the app-wide resets so XP.css can apply its own look */
   & *,
   & *::before,
   & *::after {
-    box-sizing: border-box !important;
-    font-family: Arial, sans-serif !important;
-    user-select: auto !important;
+    box-sizing: content-box;
+    font-family: inherit;
+    user-select: text;
+    letter-spacing: normal;
   }
 
-  /* Force correct font sizing for XP.css */
-  & .window,
-  & .window *,
-  & .window-body,
-  & .window-body *,
-  & .title-bar,
-  & .title-bar *,
-  & .field-row,
-  & .field-row *,
   & button,
   & input,
   & label,
   & p {
-    font-size: 11px !important;
-    line-height: normal !important;
+    font-size: inherit;
+    line-height: normal;
   }
+`;
 
-  & button {
-    padding: 0 !important;
-  }
+export const OptionsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transform: translateX(-52px);
+`;
+
+export const OptionRowWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 24px 20px 1fr;
+  align-items: center;
+  column-gap: 6px;
+  width: max-content;
+  margin: 0 auto;
+`;
+
+export const IconColumn = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 4px;
+`;
+
+export const SuitGroupWrapper = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
 `;
 
 export const SuitIcon = styled.img`
@@ -54,4 +75,17 @@ export const SuitIcon = styled.img`
   image-rendering: crisp-edges;
   vertical-align: middle;
   display: inline-block;
+`;
+
+export const LabelWrapper = styled.label`
+  cursor: pointer;
+  white-space: nowrap;
+`;
+
+export const SmallButton = styled.button`
+  min-width: 74px;
+  height: 26px;
+  padding: 0 10px;
+  font-size: 12px;
+  line-height: 26px;
 `;

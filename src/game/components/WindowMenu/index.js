@@ -13,8 +13,7 @@ function WindowMenu() {
     setCardDecks,
     dealingDecks,
     setDealingDecks,
-    setGameStats,
-    startNewGame,
+    setShowDifficultyDialog,
   } = useContext(GameContext);
 
   const [cannotDealSound, dealSound] = getSounds(
@@ -40,13 +39,7 @@ function WindowMenu() {
   };
 
   const handleNewGameClick = () => {
-    const [cDecks, dDecks] = newGame();
-    startNewGame(cDecks, dDecks);
-    setGameStats({
-      completedDeckCount: 0,
-      score: 500,
-      moves: 0,
-    });
+    setShowDifficultyDialog(true);
   };
 
   /*

@@ -3,6 +3,40 @@ import React, { useState } from 'react';
 // Assets
 import * as Styled from './styles';
 
+function SuitGroup({ suits }) {
+  return (
+    <Styled.SuitGroupWrapper>
+      {suits.map((suit, i) => (
+        <Styled.SuitIcon
+          key={i}
+          src={`${process.env.PUBLIC_URL}/suits/${suit}.png`}
+          alt={suit}
+        />
+      ))}
+    </Styled.SuitGroupWrapper>
+  );
+}
+
+function OptionRow({ checked, onChange, suits, labelText, descriptionText }) {
+  return (
+    <Styled.OptionRowWrapper>
+      <Styled.IconColumn>
+        <SuitGroup suits={suits} />
+      </Styled.IconColumn>
+      <input
+        type="radio"
+        name="difficulty"
+        checked={checked}
+        onChange={onChange}
+        style={{ margin: 0 }}
+      />
+      <Styled.LabelWrapper onClick={onChange}>
+        <strong>{labelText}</strong> {descriptionText}
+      </Styled.LabelWrapper>
+    </Styled.OptionRowWrapper>
+  );
+}
+
 function DifficultyDialog({ onSelectDifficulty, onCancel }) {
   const [selectedDifficulty, setSelectedDifficulty] = useState('easy');
 
@@ -13,68 +47,52 @@ function DifficultyDialog({ onSelectDifficulty, onCancel }) {
   return (
     <Styled.Overlay>
       <Styled.XPWrapper>
-        <div className="window" style={{ width: '400px' }}>
+        <div className="window" style={{ width: '320px', maxWidth: '90vw' }}>
           <div className="title-bar">
             <div className="title-bar-text">Difficulty</div>
             <div className="title-bar-controls">
               <button aria-label="Close" onClick={onCancel}></button>
             </div>
           </div>
-          <div className="window-body">
-            <p style={{ marginBottom: '16px' }}>Select the game difficulty level that you want</p>
+          <div className="window-body" style={{ padding: '12px 14px 14px' }}>
+            <p style={{ margin: '2px 0 10px', textAlign: 'left' }}>
+              Select the game difficulty level that you want:
+            </p>
 
-            <div className="field-row" style={{ marginBottom: '8px' }}>
-              <input
-                type="radio"
-                id="easy"
-                name="difficulty"
-                value="easy"
+            <Styled.OptionsContainer>
+              <OptionRow
                 checked={selectedDifficulty === 'easy'}
-                onChange={(e) => setSelectedDifficulty(e.target.value)}
+                onChange={() => setSelectedDifficulty('easy')}
+                suits={['Spades']}
+                labelText="Easy:"
+                descriptionText="One Suit"
               />
-              <label htmlFor="easy">
-                <Styled.SuitIcon src={`${process.env.PUBLIC_URL}/suits/Spades.png`} alt="Spades" />
-                {' '}Easy: One Suit
-              </label>
-            </div>
-
-            <div className="field-row" style={{ marginBottom: '8px' }}>
-              <input
-                type="radio"
-                id="medium"
-                name="difficulty"
-                value="medium"
+              <OptionRow
                 checked={selectedDifficulty === 'medium'}
-                onChange={(e) => setSelectedDifficulty(e.target.value)}
+                onChange={() => setSelectedDifficulty('medium')}
+                suits={['Hearts', 'Spades']}
+                labelText="Medium:"
+                descriptionText="Two Suits"
               />
-              <label htmlFor="medium">
-                <Styled.SuitIcon src={`${process.env.PUBLIC_URL}/suits/Hearts.png`} alt="Hearts" />
-                <Styled.SuitIcon src={`${process.env.PUBLIC_URL}/suits/Spades.png`} alt="Spades" />
-                {' '}Medium: Two Suits
-              </label>
-            </div>
-
-            <div className="field-row" style={{ marginBottom: '16px' }}>
-              <input
-                type="radio"
-                id="difficult"
-                name="difficulty"
-                value="difficult"
+              <OptionRow
                 checked={selectedDifficulty === 'difficult'}
-                onChange={(e) => setSelectedDifficulty(e.target.value)}
+                onChange={() => setSelectedDifficulty('difficult')}
+                suits={['Diamonds', 'Clubs', 'Hearts', 'Spades']}
+                labelText="Difficult:"
+                descriptionText="Four Suits"
               />
-              <label htmlFor="difficult">
-                <Styled.SuitIcon src={`${process.env.PUBLIC_URL}/suits/Diamonds.png`} alt="Diamonds" />
-                <Styled.SuitIcon src={`${process.env.PUBLIC_URL}/suits/Clubs.png`} alt="Clubs" />
-                <Styled.SuitIcon src={`${process.env.PUBLIC_URL}/suits/Hearts.png`} alt="Hearts" />
-                <Styled.SuitIcon src={`${process.env.PUBLIC_URL}/suits/Spades.png`} alt="Spades" />
-                {' '}Difficult: Four Suits
-              </label>
-            </div>
+            </Styled.OptionsContainer>
 
-            <div className="field-row" style={{ justifyContent: 'center' }}>
-              <button onClick={handleOk}>OK</button>
-              <button onClick={onCancel}>Cancel</button>
+            <div
+              className="field-row"
+              style={{
+                justifyContent: 'center',
+                marginTop: '14px',
+                gap: '14px'
+              }}
+            >
+              <Styled.SmallButton onClick={handleOk}>OK</Styled.SmallButton>
+              <Styled.SmallButton onClick={onCancel}>Cancel</Styled.SmallButton>
             </div>
           </div>
         </div>

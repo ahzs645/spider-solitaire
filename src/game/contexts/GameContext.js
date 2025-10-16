@@ -29,16 +29,16 @@ function GameContextProvider(props) {
   const { children } = props;
 
   const [cardDecks, setCardDecks] = useState({
-    deck1: {},
-    deck2: {},
-    deck3: {},
-    deck4: {},
-    deck5: {},
-    deck6: {},
-    deck7: {},
-    deck8: {},
-    deck9: {},
-    deck10: {},
+    deck1: { cards: [], visibleCardCount: 0 },
+    deck2: { cards: [], visibleCardCount: 0 },
+    deck3: { cards: [], visibleCardCount: 0 },
+    deck4: { cards: [], visibleCardCount: 0 },
+    deck5: { cards: [], visibleCardCount: 0 },
+    deck6: { cards: [], visibleCardCount: 0 },
+    deck7: { cards: [], visibleCardCount: 0 },
+    deck8: { cards: [], visibleCardCount: 0 },
+    deck9: { cards: [], visibleCardCount: 0 },
+    deck10: { cards: [], visibleCardCount: 0 },
   });
   const [dealingDecks, setDealingDecks] = useState([]);
   const [isAnyDragging, setIsAnyDragging] = useState(false);
@@ -95,6 +95,12 @@ function GameContextProvider(props) {
       }
       const topCards = getTopCards(newCardDecks);
       triggerDealAnimation(topCards);
+      // Reset game stats when starting new game
+      setGameStats({
+        completedDeckCount: 0,
+        score: 500,
+        moves: 0,
+      });
     },
     [triggerDealAnimation],
   );
@@ -105,16 +111,19 @@ function GameContextProvider(props) {
   ====================================================
   */
 
+  // Start game when difficulty is selected
   useEffect(() => {
-    const [cDecks, dDecks] = getRandomDecks();
-    startNewGame(cDecks, dDecks);
+    if (difficulty !== null) {
+      const [cDecks, dDecks] = getRandomDecks(difficulty);
+      startNewGame(cDecks, dDecks);
+    }
 
     return () => {
       if (initialDealTimerRef.current) {
         clearTimeout(initialDealTimerRef.current);
       }
     };
-  }, [startNewGame]);
+  }, [difficulty, startNewGame]);
 
   const contextValue = useMemo(
     () => ({

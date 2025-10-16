@@ -1,13 +1,14 @@
 // Libraries
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 // Components | Utils
-import { newGame } from '../../../utils/cardUtils';
+import { GameContext } from '../../../contexts/GameContext';
 import getSounds from '../../../utils/soundUtils';
 // Assets
 import * as Styled from './styles';
 
 function GameOver(props) {
-  const { startNewGame, gameStats, setGameStats } = props;
+  const { gameStats } = props;
+  const { setShowDifficultyDialog } = useContext(GameContext);
 
   const [winSound] = getSounds('win');
 
@@ -28,13 +29,7 @@ function GameOver(props) {
   */
 
   const handleNewGameClick = () => {
-    const [cDecks, dDecks] = newGame();
-    startNewGame(cDecks, dDecks);
-    setGameStats({
-      completedDeckCount: 0,
-      score: 500,
-      moves: 0,
-    });
+    setShowDifficultyDialog(true);
   };
 
   /*
