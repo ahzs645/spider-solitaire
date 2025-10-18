@@ -53,39 +53,45 @@ function GameContextProvider(props) {
   const [dealDeckPosition, setDealDeckPosition] = useState({ x: 0, y: 0 });
   const [difficulty, setDifficulty] = useState(null);
   const [showDifficultyDialog, setShowDifficultyDialog] = useState(true);
+  const [pendingDealCards, setPendingDealCards] = useState([]);
   const initialDealTimerRef = useRef(null);
 
-  const triggerDealAnimation = useCallback((cards) => {
-    if (initialDealTimerRef.current) {
-      clearTimeout(initialDealTimerRef.current);
-    }
-
-    if (!cards || cards.length === 0) {
-      setDealAnimationOrder({});
-      setIsDealAnimationRunning(false);
-      return;
-    }
-
-    const orderMap = {};
-    cards.forEach((card, index) => {
-      if (card) {
-        orderMap[card.id] = index;
+  const triggerDealAnimation = useCallback(
+    (cards) => {
+      if (initialDealTimerRef.current) {
+        clearTimeout(initialDealTimerRef.current);
       }
-    });
 
-    setDealAnimationOrder(orderMap);
-    setIsDealAnimationRunning(true);
+      if (!cards || cards.length === 0) {
+        setDealAnimationOrder({});
+        setIsDealAnimationRunning(false);
+        setPendingDealCards([]);
+        return;
+      }
 
-    const totalDelay =
-      (cards.length - 1) * INITIAL_DEAL_ANIMATION_DELAY +
-      INITIAL_DEAL_ANIMATION_DURATION;
+      const orderMap = {};
+      cards.forEach((card, index) => {
+        if (card) {
+          orderMap[card.id] = index;
+        }
+      });
 
-    initialDealTimerRef.current = setTimeout(() => {
-      setDealAnimationOrder({});
-      setIsDealAnimationRunning(false);
-      initialDealTimerRef.current = null;
-    }, totalDelay);
-  }, []);
+      setDealAnimationOrder(orderMap);
+      setIsDealAnimationRunning(true);
+
+      const totalDelay =
+        (cards.length - 1) * INITIAL_DEAL_ANIMATION_DELAY +
+        INITIAL_DEAL_ANIMATION_DURATION;
+
+      initialDealTimerRef.current = setTimeout(() => {
+        setDealAnimationOrder({});
+        setIsDealAnimationRunning(false);
+        setPendingDealCards([]);
+        initialDealTimerRef.current = null;
+      }, totalDelay);
+    },
+    [setPendingDealCards],
+  );
 
   const startNewGame = useCallback(
     (newCardDecks, newDealingDecks) => {
@@ -93,6 +99,7 @@ function GameContextProvider(props) {
       if (newDealingDecks) {
         setDealingDecks(newDealingDecks);
       }
+      setPendingDealCards([]);
       const topCards = getTopCards(newCardDecks);
       triggerDealAnimation(topCards);
       // Reset game stats when starting new game
@@ -102,7 +109,7 @@ function GameContextProvider(props) {
         moves: 0,
       });
     },
-    [triggerDealAnimation],
+    [triggerDealAnimation, setPendingDealCards],
   );
 
   /*
@@ -139,6 +146,8 @@ function GameContextProvider(props) {
       isDealAnimationRunning,
       dealDeckPosition,
       setDealDeckPosition,
+      pendingDealCards,
+      setPendingDealCards,
       difficulty,
       setDifficulty,
       showDifficultyDialog,
@@ -154,6 +163,7 @@ function GameContextProvider(props) {
       dealAnimationOrder,
       isDealAnimationRunning,
       dealDeckPosition,
+      pendingDealCards,
       difficulty,
       showDifficultyDialog,
       startNewGame,

@@ -3,15 +3,21 @@ import React, {
   useContext,
   useRef,
   useEffect,
+  useLayoutEffect,
   useCallback,
+  useState,
 } from 'react';
 // Components | Utils
-import Card from '../Card';
+import Card, { CardArtwork } from '../Card';
 import { deal } from '../../../utils/cardUtils';
 import getSounds from '../../../utils/soundUtils';
 // Assets
 import * as Styled from './styles';
-import { GameContext } from '../../../contexts/GameContext';
+import {
+  GameContext,
+  INITIAL_DEAL_ANIMATION_DELAY,
+  INITIAL_DEAL_ANIMATION_DURATION,
+} from '../../../contexts/GameContext';
 
 function DealArea(props) {
   const { setCardDecks, cardDecks } = props;
@@ -26,13 +32,29 @@ function DealArea(props) {
     triggerDealAnimation,
     isDealAnimationRunning,
     setDealDeckPosition,
+    pendingDealCards,
+    setPendingDealCards,
   } = useContext(GameContext);
+  const scheduledDealFrameRef = useRef(null);
+  const pendingRemovalTimeoutsRef = useRef([]);
+  const [pendingActiveIndex, setPendingActiveIndex] = useState(0);
 
   const getTopCardRect = useCallback(() => {
     const dealAreaElement = dealAreaRef.current;
 
     if (!dealAreaElement) {
       return null;
+    }
+
+    const pendingFrontCard = dealAreaElement.querySelector(
+      '[data-pending-card="front"]',
+    );
+
+    if (pendingFrontCard) {
+      const pendingMeasurementTarget =
+        pendingFrontCard.querySelector('img') || pendingFrontCard;
+
+      return pendingMeasurementTarget.getBoundingClientRect();
     }
 
     const childCards = Array.from(dealAreaElement.children).filter(
@@ -88,6 +110,54 @@ function DealArea(props) {
     });
   }, [getTopCardRect, setDealDeckPosition]);
 
+  const hasMeasuredPendingRef = useRef(false);
+
+  useLayoutEffect(() => {
+    if (!pendingDealCards.length) {
+      hasMeasuredPendingRef.current = false;
+      return undefined;
+    }
+
+    if (isDealAnimationRunning && hasMeasuredPendingRef.current) {
+      return undefined;
+    }
+
+    hasMeasuredPendingRef.current = true;
+
+    const frameId = requestAnimationFrame(updateDealDeckPosition);
+
+    return () => {
+      cancelAnimationFrame(frameId);
+    };
+  }, [
+    pendingDealCards.length,
+    isDealAnimationRunning,
+    updateDealDeckPosition,
+  ]);
+
+  useEffect(() => {
+    return () => {
+      if (scheduledDealFrameRef.current !== null) {
+        cancelAnimationFrame(scheduledDealFrameRef.current);
+      }
+      pendingRemovalTimeoutsRef.current.forEach((timeoutId) => {
+        clearTimeout(timeoutId);
+      });
+      pendingRemovalTimeoutsRef.current = [];
+      setPendingActiveIndex(0);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (pendingDealCards.length === 0) {
+      pendingRemovalTimeoutsRef.current.forEach((timeoutId) => {
+        clearTimeout(timeoutId);
+      });
+      pendingRemovalTimeoutsRef.current = [];
+      setPendingActiveIndex(0);
+    }
+  }, [pendingDealCards.length]);
+
   useEffect(() => {
     if (!dealAreaRef.current || isDealAnimationRunning) {
       return undefined;
@@ -103,6 +173,7 @@ function DealArea(props) {
   }, [
     dealingDecks,
     isDealAnimationRunning,
+    pendingDealCards,
     updateDealDeckPosition,
   ]);
 
@@ -148,28 +219,95 @@ function DealArea(props) {
       return;
     }
 
-    updateDealDeckPosition();
+    if (!dealingDecks.length) {
+      return;
+    }
 
-    dealSound.play();
+    const nextDealCards = dealingDecks[0]
+      ? [...dealingDecks[0]]
+      : [];
 
-    const [returnCardDecks, returnDealingDecks] = deal(
-      cardDecks,
-      dealingDecks,
-      cannotDealSound,
-    );
+    if (!nextDealCards.length) {
+      return;
+    }
 
-    setCardDecks(returnCardDecks);
-    setDealingDecks(returnDealingDecks);
+    if (scheduledDealFrameRef.current !== null) {
+      cancelAnimationFrame(scheduledDealFrameRef.current);
+    }
 
-    const newlyDealtCards = Array.from({ length: 10 }, (_, index) => {
-      const deck = returnCardDecks[`deck${index + 1}`];
-      if (!deck || deck.cards.length === 0) {
-        return undefined;
+    pendingRemovalTimeoutsRef.current.forEach((timeoutId) => {
+      clearTimeout(timeoutId);
+    });
+    pendingRemovalTimeoutsRef.current = [];
+
+    setPendingDealCards(nextDealCards);
+    setPendingActiveIndex(0);
+
+    scheduledDealFrameRef.current = requestAnimationFrame(() => {
+      scheduledDealFrameRef.current = null;
+
+      updateDealDeckPosition();
+
+      dealSound.play();
+
+      const [returnCardDecks, returnDealingDecks] = deal(
+        cardDecks,
+        dealingDecks,
+        cannotDealSound,
+      );
+
+      setCardDecks(returnCardDecks);
+      setDealingDecks(returnDealingDecks);
+
+      const hasDealtCards =
+        returnDealingDecks.length < dealingDecks.length;
+
+      if (!hasDealtCards) {
+        pendingRemovalTimeoutsRef.current.forEach((timeoutId) => {
+          clearTimeout(timeoutId);
+        });
+        pendingRemovalTimeoutsRef.current = [];
+        setPendingDealCards([]);
+        setPendingActiveIndex(0);
+        return;
       }
-      return deck.cards[deck.cards.length - 1];
-    }).filter(Boolean);
 
-    triggerDealAnimation(newlyDealtCards);
+      const newlyDealtCards = Array.from(
+        { length: 10 },
+        (_, index) => {
+          const deck = returnCardDecks[`deck${index + 1}`];
+          if (!deck || deck.cards.length === 0) {
+            return undefined;
+          }
+          return deck.cards[deck.cards.length - 1];
+        },
+      ).filter(Boolean);
+
+      triggerDealAnimation(newlyDealtCards);
+
+      pendingRemovalTimeoutsRef.current = nextDealCards.map(
+        (_card, index) => {
+          const delay =
+            index * INITIAL_DEAL_ANIMATION_DELAY +
+            INITIAL_DEAL_ANIMATION_DURATION;
+
+          return setTimeout(() => {
+            setPendingActiveIndex((previous) => {
+              const nextIndex = Math.min(
+                previous + 1,
+                nextDealCards.length,
+              );
+
+              if (index === nextDealCards.length - 1) {
+                setPendingDealCards([]);
+              }
+
+              return nextIndex;
+            });
+          }, delay);
+        },
+      );
+    });
   };
 
   /*
@@ -189,11 +327,40 @@ function DealArea(props) {
       }
       $dealingDecksLength={dealingDecks.length}
     >
+      {pendingDealCards.length ? (
+        <Styled.PendingDealCards data-visible="true">
+          {pendingDealCards.map((card, index) => {
+            const totalCards = pendingDealCards.length;
+            const isActive = index === pendingActiveIndex;
+            return (
+              <Styled.PendingDealCard
+                key={card?.id ?? `pending-${index}`}
+                $zIndex={totalCards - index}
+                $isActive={isActive}
+                data-pending-card={
+                  isActive
+                    ? 'front'
+                    : index < pendingActiveIndex
+                    ? 'dealt'
+                    : 'queued'
+                }
+              >
+                <CardArtwork card={card} isClose={false} />
+              </Styled.PendingDealCard>
+            );
+          })}
+        </Styled.PendingDealCards>
+      ) : null}
       {Array.from({ length: 5 }, (_, index) => {
         const positionFromRight = 5 - index;
         const shouldShow = positionFromRight <= dealingDecks.length;
         return shouldShow ? (
-          <div key={index} className="card" data-position={index + 1}>
+          <div
+            key={index}
+            className="card"
+            data-position={index + 1}
+            data-deal-measure="true"
+          >
             <Card isClose />
           </div>
         ) : null;

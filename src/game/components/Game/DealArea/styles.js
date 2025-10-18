@@ -75,3 +75,26 @@ export const DealArea = styled.div`
     }
   }
 `;
+
+export const PendingDealCards = styled.div`
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  z-index: 10;
+`;
+
+export const PendingDealCard = styled.div`
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: auto;
+  z-index: ${(props) => 10 + props.$zIndex};
+  opacity: ${(props) => (props.$isActive ? 1 : 0)};
+  transition: opacity 120ms ease-out;
+
+  img {
+    height: 100%;
+    width: auto;
+  }
+`;
