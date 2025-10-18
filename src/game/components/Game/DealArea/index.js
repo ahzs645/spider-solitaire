@@ -1,5 +1,5 @@
 // Libraries
-import React, { useContext, useRef, useEffect } from 'react';
+import React, { useContext, useRef, useEffect, useCallback } from 'react';
 // Components | Utils
 import Card from '../Card';
 import { deal } from '../../../utils/cardUtils';
@@ -23,24 +23,103 @@ function DealArea(props) {
     setDealDeckPosition,
   } = useContext(GameContext);
 
-  useEffect(() => {
-    if (dealAreaRef.current) {
-      const updatePosition = () => {
-        const rect = dealAreaRef.current.getBoundingClientRect();
-        setDealDeckPosition({
-          x: rect.left + rect.width / 2,
-          y: rect.top + rect.height / 2,
-        });
-      };
+  const getTopCardRect = useCallback(() => {
+    const dealAreaElement = dealAreaRef.current;
 
-      updatePosition();
-      window.addEventListener('resize', updatePosition);
-
-      return () => {
-        window.removeEventListener('resize', updatePosition);
-      };
+    if (!dealAreaElement) {
+      return null;
     }
-  }, [setDealDeckPosition]);
+
+    const childCards = Array.from(dealAreaElement.children).filter(
+      (node) =>
+        node instanceof HTMLElement && node.classList.contains('card'),
+    );
+
+    const visibleCards = childCards.filter(
+      (node) => node.offsetParent !== null,
+    );
+
+    if (visibleCards.length === 0) {
+      return null;
+    }
+
+    const topMostCard = visibleCards.reduce((farthest, element) => {
+      const currentPosition = Number(element.dataset.position) || -Infinity;
+      if (!farthest) {
+        return element;
+      }
+
+      const farthestPosition =
+        Number(farthest.dataset.position) || -Infinity;
+
+      return currentPosition > farthestPosition ? element : farthest;
+    }, null);
+
+    if (!topMostCard) {
+      return null;
+    }
+
+    const measurementTarget =
+      topMostCard.querySelector('img') || topMostCard;
+
+    return measurementTarget.getBoundingClientRect();
+  }, []);
+
+  const updateDealDeckPosition = useCallback(() => {
+    const topCardRect = getTopCardRect();
+    const fallbackRect = dealAreaRef.current
+      ? dealAreaRef.current.getBoundingClientRect()
+      : null;
+
+    const targetRect = topCardRect || fallbackRect;
+
+    if (!targetRect) {
+      return;
+    }
+
+    setDealDeckPosition({
+      x: targetRect.left + targetRect.width / 2,
+      y: targetRect.top + targetRect.height / 2,
+    });
+  }, [getTopCardRect, setDealDeckPosition]);
+
+  useEffect(() => {
+    if (!dealAreaRef.current) {
+      return undefined;
+    }
+
+    let animationFrameId = null;
+
+    const scheduleUpdate = () => {
+      if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId);
+      }
+      animationFrameId = requestAnimationFrame(updateDealDeckPosition);
+    };
+
+    if (!isDealAnimationRunning) {
+      scheduleUpdate();
+    }
+
+    const handleResize = () => {
+      if (!isDealAnimationRunning) {
+        scheduleUpdate();
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId);
+      }
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [
+    updateDealDeckPosition,
+    dealingDecks,
+    isDealAnimationRunning,
+  ]);
   /*
   ====================================================
   =================== HANDLER ========================
@@ -51,6 +130,8 @@ function DealArea(props) {
     if (isDealAnimationRunning) {
       return;
     }
+
+    updateDealDeckPosition();
 
     dealSound.play();
 

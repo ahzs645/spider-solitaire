@@ -1,5 +1,10 @@
 // Libraries
-import React, { useContext, useRef, useState, useEffect } from 'react';
+import React, {
+  useContext,
+  useRef,
+  useState,
+  useLayoutEffect,
+} from 'react';
 import { useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 // Components | Utils
@@ -57,7 +62,7 @@ function Card(props) {
   } = props;
 
   const cardRef = useRef(null);
-  const [animationOffset, setAnimationOffset] = useState({ x: 400, y: 350 });
+  const [animationOffset, setAnimationOffset] = useState({ x: 0, y: 0 });
   const [mouseDownSound] = getSounds('mouse-down');
 
   const { dealAnimationOrder, isDealAnimationRunning, dealDeckPosition } =
@@ -82,7 +87,7 @@ function Card(props) {
     });
 
   // Calculate animation offset when deal animation starts
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (shouldAnimateDeal && cardRef.current && dealDeckPosition.x > 0) {
       const cardRect = cardRef.current.getBoundingClientRect();
       const cardCenterX = cardRect.left + cardRect.width / 2;
@@ -93,7 +98,7 @@ function Card(props) {
         y: dealDeckPosition.y - cardCenterY,
       });
     }
-  }, [shouldAnimateDeal, dealDeckPosition, cardRef]);
+  }, [shouldAnimateDeal, dealDeckPosition]);
 
   const handleMouseDownFromCard = (e) => {
     e.preventDefault();
