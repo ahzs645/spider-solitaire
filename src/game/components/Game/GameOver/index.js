@@ -6,9 +6,9 @@ import getSounds from '../../../utils/soundUtils';
 // Assets
 import * as Styled from './styles';
 
-function GameOver(props) {
-  const { gameStats } = props;
-  const { setShowDifficultyDialog } = useContext(GameContext);
+function GameOver() {
+  const { setShowDifficultyDialog, showDifficultyDialog } =
+    useContext(GameContext);
 
   const [winSound] = getSounds('win');
 
@@ -38,30 +38,35 @@ function GameOver(props) {
   ====================================================
   */
 
+  if (showDifficultyDialog) {
+    return null;
+  }
+
   return (
     <>
-      <Styled.WinScreen>
-        <span>You Won!</span>
-      </Styled.WinScreen>
-
-      <Styled.Window>
-        <Styled.TitleBar>
-          <span>Game Over</span>
-        </Styled.TitleBar>
-
-        <Styled.WindowBody>
-          <p>
-            Congratulations!
-            <br />
-            You won with {gameStats?.score} points in{' '}
-            {gameStats?.moves} moves.
-          </p>
-          <p> Do you want to start another game?</p>
-          <Styled.YesButton onClick={handleNewGameClick}>
-            Yes
-          </Styled.YesButton>
-        </Styled.WindowBody>
-      </Styled.Window>
+      <Styled.WinScreen>You Won!</Styled.WinScreen>
+      <Styled.Overlay>
+        <Styled.XPWrapper>
+          <div className="window" style={{ width: '320px', maxWidth: '90vw' }}>
+            <div className="title-bar">
+              <div className="title-bar-text">Congratulations</div>
+            </div>
+            <div className="window-body" style={{ padding: '16px 18px' }}>
+              <Styled.Body>
+                <p>
+                  Congratulations! You solved the puzzle.
+                </p>
+                <p>Do you want to start another game?</p>
+                <Styled.ActionsRow>
+                  <Styled.PrimaryButton onClick={handleNewGameClick}>
+                    New Game
+                  </Styled.PrimaryButton>
+                </Styled.ActionsRow>
+              </Styled.Body>
+            </div>
+          </div>
+        </Styled.XPWrapper>
+      </Styled.Overlay>
     </>
   );
 }

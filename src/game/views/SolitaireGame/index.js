@@ -20,20 +20,18 @@ function SolitaireGame() {
     setCardDecks,
     gameStats,
     setGameStats,
-    startNewGame,
+    beginNewGame,
     showDifficultyDialog,
     setShowDifficultyDialog,
-    setDifficulty,
   } = useContext(GameContext);
 
   const handleSelectDifficulty = (selectedDifficulty) => {
-    setDifficulty(selectedDifficulty);
+    beginNewGame(selectedDifficulty);
     setShowDifficultyDialog(false);
   };
 
   const handleCancelDifficulty = () => {
     setShowDifficultyDialog(false);
-    setDifficulty('medium'); // Default to medium if cancelled
   };
 
   /*
@@ -68,11 +66,7 @@ function SolitaireGame() {
                 cardDecks={cardDecks}
               />
             </Styled.BottomArea>
-            {gameStats.completedDeckCount === 8 && (
-              <GameOver
-                gameStats={gameStats}
-              />
-            )}
+            {gameStats.completedDeckCount === 8 && <GameOver />}
           </Styled.Board>
         </Window>
       </HintContextProvider>

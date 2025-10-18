@@ -1,121 +1,53 @@
 // Libraries
 import styled from 'styled-components';
 // Components | Utils
-import { styledComponents } from '../../../../globalStyles';
+import {
+  XPWrapper as BaseXPWrapper,
+  SmallButton as BaseSmallButton,
+} from '../DifficultyDialog/styles';
 
 export const WinScreen = styled.div`
-  animation: ${(props) => props.theme.keyFrames.colorChange} 10s
-    infinite;
-  align-items: center;
-  display: flex;
-  font-size: 4rem;
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 42px;
   font-weight: bold;
-  height: 100%;
-  justify-content: center;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 100%;
+  color: #fffbe6;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  z-index: 10000;
 `;
 
-export const Window = styled.div`
-  background-color: ${(props) => props.theme.colors.xpWindowBg};
-  bottom: 10px;
-  border-top-left-radius: 13px;
-  border-top-right-radius: 13px;
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-  display: grid;
-  grid-template-rows: 30px 1fr;
-  height: 150px;
-  left: 0;
-  margin: 0 auto;
-  overflow: hidden;
-  position: absolute;
-  right: 0;
-  width: 300px;
-  z-index: 2;
+export const Overlay = styled.div`
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 10001;
+  pointer-events: none;
 `;
 
-export const TitleBar = styled.div`
-  align-items: center;
-  background: ${(props) => props.theme.gradients.titleBarBg};
-  color: ${(props) => props.theme.colors.titleBarText};
-  display: flex;
-  font-family: 'Trebuchet MS';
-  font-size: 13px;
-  padding: 6px 15px;
-
-  img {
-    height: 100%;
-  }
+export const XPWrapper = styled(BaseXPWrapper)`
+  pointer-events: auto;
 `;
 
-export const WindowBody = styled.div`
-  align-items: center;
-  border: 1px solid ${(props) => props.theme.colors.windowBorder};
+export const Body = styled.div`
   display: flex;
   flex-direction: column;
-  font-size: 0.7rem;
-  gap: 10px;
-  height: 100%;
-  text-align: center;
-  justify-content: center;
-`;
-
-export const WindowContent = styled.div`
-  background-color: ${(props) => props.theme.colors.xpWindowBg};
-  display: flex;
-  flex-direction: column;
-  font-size: 0.6rem;
-  gap: 8px;
-  margin-top: 10px;
-  padding-left: 10px;
-  padding-right: 10px;
-  text-align: center;
+  gap: 12px;
+  text-align: left;
 
   p {
-    line-height: 0.9rem;
-  }
-
-  button {
-    background-color: ${(props) => props.theme.colors.buttonBg};
-    border: 1px solid black;
-    border-radius: 3px;
-    color: ${(props) => props.theme.colors.buttonText};
-    font-size: 0.55rem;
-    height: 20px;
-    margin: 0 auto;
-    width: 60px;
-
-    &:hover {
-      box-shadow: ${(props) =>
-        props.theme.boxShadows.windowButton$hover};
-    }
-
-    &:active {
-      box-shadow: ${(props) =>
-        props.theme.boxShadows.windowButton$active};
-    }
+    margin: 0;
+    line-height: 1.45;
   }
 `;
 
-export const YesButton = styled(styledComponents.Button)`
-  background-color: ${(props) => props.theme.colors.buttonBg};
-  border: 1px solid black;
-  border-radius: 3px;
-  color: ${(props) => props.theme.colors.buttonText};
-  font-size: 0.55rem;
-  height: 20px;
-  margin: 0 auto;
-  width: 60px;
+export const ActionsRow = styled.div`
+  display: flex;
+  justify-content: flex-end;
+`;
 
-  &:hover {
-    box-shadow: ${(props) =>
-      props.theme.boxShadows.windowButton$hover};
-  }
-
-  &:active {
-    box-shadow: ${(props) =>
-      props.theme.boxShadows.windowButton$active};
-  }
+export const PrimaryButton = styled(BaseSmallButton)`
+  min-width: 96px;
 `;

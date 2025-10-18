@@ -15,6 +15,19 @@ export const GameContext = createContext();
 export const INITIAL_DEAL_ANIMATION_DURATION = 360;
 export const INITIAL_DEAL_ANIMATION_DELAY = 90;
 
+const createEmptyDeckState = () => ({
+  deck1: { cards: [], visibleCardCount: 0 },
+  deck2: { cards: [], visibleCardCount: 0 },
+  deck3: { cards: [], visibleCardCount: 0 },
+  deck4: { cards: [], visibleCardCount: 0 },
+  deck5: { cards: [], visibleCardCount: 0 },
+  deck6: { cards: [], visibleCardCount: 0 },
+  deck7: { cards: [], visibleCardCount: 0 },
+  deck8: { cards: [], visibleCardCount: 0 },
+  deck9: { cards: [], visibleCardCount: 0 },
+  deck10: { cards: [], visibleCardCount: 0 },
+});
+
 const getTopCards = (decks) => {
   return Array.from({ length: 10 }, (_, index) => {
     const deck = decks[`deck${index + 1}`];
@@ -28,18 +41,7 @@ const getTopCards = (decks) => {
 function GameContextProvider(props) {
   const { children } = props;
 
-  const [cardDecks, setCardDecks] = useState({
-    deck1: { cards: [], visibleCardCount: 0 },
-    deck2: { cards: [], visibleCardCount: 0 },
-    deck3: { cards: [], visibleCardCount: 0 },
-    deck4: { cards: [], visibleCardCount: 0 },
-    deck5: { cards: [], visibleCardCount: 0 },
-    deck6: { cards: [], visibleCardCount: 0 },
-    deck7: { cards: [], visibleCardCount: 0 },
-    deck8: { cards: [], visibleCardCount: 0 },
-    deck9: { cards: [], visibleCardCount: 0 },
-    deck10: { cards: [], visibleCardCount: 0 },
-  });
+  const [cardDecks, setCardDecks] = useState(createEmptyDeckState());
   const [dealingDecks, setDealingDecks] = useState([]);
   const [isAnyDragging, setIsAnyDragging] = useState(false);
   const [gameStats, setGameStats] = useState({
@@ -112,25 +114,35 @@ function GameContextProvider(props) {
     [triggerDealAnimation, setPendingDealCards],
   );
 
-  /*
-  ====================================================
-  ================== USE EFFECT ======================
-  ====================================================
-  */
+  const beginNewGame = useCallback(
+    (selectedDifficulty) => {
+      const [newCardDecks, newDealingDecks] =
+        getRandomDecks(selectedDifficulty);
 
-  // Start game when difficulty is selected
-  useEffect(() => {
-    if (difficulty !== null) {
-      const [cDecks, dDecks] = getRandomDecks(difficulty);
-      startNewGame(cDecks, dDecks);
+      setDifficulty(selectedDifficulty);
+      startNewGame(newCardDecks, newDealingDecks);
+    },
+    [startNewGame],
+  );
+
+  const playToVictory = useCallback(() => {
+    if (initialDealTimerRef.current) {
+      clearTimeout(initialDealTimerRef.current);
+      initialDealTimerRef.current = null;
     }
 
-    return () => {
-      if (initialDealTimerRef.current) {
-        clearTimeout(initialDealTimerRef.current);
-      }
-    };
-  }, [difficulty, startNewGame]);
+    setDealAnimationOrder({});
+    setIsDealAnimationRunning(false);
+    setPendingDealCards([]);
+    setDealingDecks([]);
+    setCardDecks(createEmptyDeckState());
+    setGameStats((prevStats) => ({
+      completedDeckCount: 8,
+      score: Math.max(prevStats.score, 1000),
+      moves: prevStats.moves,
+    }));
+    setShowDifficultyDialog(false);
+  }, [setShowDifficultyDialog]);
 
   const contextValue = useMemo(
     () => ({
@@ -154,6 +166,8 @@ function GameContextProvider(props) {
       setShowDifficultyDialog,
       startNewGame,
       triggerDealAnimation,
+      beginNewGame,
+      playToVictory,
     }),
     [
       cardDecks,
@@ -168,8 +182,28 @@ function GameContextProvider(props) {
       showDifficultyDialog,
       startNewGame,
       triggerDealAnimation,
+      beginNewGame,
+      playToVictory,
     ],
   );
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.playSpiderSolitaireToVictory = playToVictory;
+      window.startSpiderSolitaireGame = beginNewGame;
+
+      return () => {
+        if (window.playSpiderSolitaireToVictory === playToVictory) {
+          delete window.playSpiderSolitaireToVictory;
+        }
+        if (window.startSpiderSolitaireGame === beginNewGame) {
+          delete window.startSpiderSolitaireGame;
+        }
+      };
+    }
+
+    return undefined;
+  }, [playToVictory, beginNewGame]);
 
   /*
   ====================================================
