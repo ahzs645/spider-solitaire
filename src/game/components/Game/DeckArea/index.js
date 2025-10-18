@@ -1,5 +1,10 @@
 // Libraries
-import React, { useContext, useMemo, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
 import {
   DndContext,
   DragOverlay,
@@ -30,6 +35,55 @@ const DeckArea = () => {
         distance: 8,
       },
     })
+  );
+
+  const restrictToViewport = useCallback(
+    ({ transform, activeNodeRect }) => {
+      if (!transform || !activeNodeRect) {
+        return transform;
+      }
+
+      const clamp = (value, min, max) => {
+        if (max < min) {
+          return min;
+        }
+        if (value < min) {
+          return min;
+        }
+        if (value > max) {
+          return max;
+        }
+        return value;
+      };
+
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const scrollX = window.scrollX || 0;
+      const scrollY = window.scrollY || 0;
+
+      const minX = scrollX - activeNodeRect.left;
+      const maxX =
+        scrollX +
+        viewportWidth -
+        (activeNodeRect.left + activeNodeRect.width);
+      const minY = scrollY - activeNodeRect.top;
+      const maxY =
+        scrollY +
+        viewportHeight -
+        (activeNodeRect.top + activeNodeRect.height);
+
+      return {
+        ...transform,
+        x: clamp(transform.x, minX, maxX),
+        y: clamp(transform.y, minY, maxY),
+      };
+    },
+    [],
+  );
+
+  const dragModifiers = useMemo(
+    () => [restrictToViewport],
+    [restrictToViewport],
   );
 
   /*
@@ -167,6 +221,7 @@ const DeckArea = () => {
       collisionDetection={closestCenter}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
+      modifiers={dragModifiers}
     >
       <Styled.DeckArea>
         {Array.from({ length: 10 }, (_, i) => i + 1).map((no) => (

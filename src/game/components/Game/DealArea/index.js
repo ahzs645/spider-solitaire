@@ -1,5 +1,10 @@
 // Libraries
-import React, { useContext, useRef, useEffect, useCallback } from 'react';
+import React, {
+  useContext,
+  useRef,
+  useEffect,
+  useCallback,
+} from 'react';
 // Components | Utils
 import Card from '../Card';
 import { deal } from '../../../utils/cardUtils';
@@ -84,42 +89,54 @@ function DealArea(props) {
   }, [getTopCardRect, setDealDeckPosition]);
 
   useEffect(() => {
+    if (!dealAreaRef.current || isDealAnimationRunning) {
+      return undefined;
+    }
+
+    const animationFrameId = requestAnimationFrame(
+      updateDealDeckPosition,
+    );
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, [
+    dealingDecks,
+    isDealAnimationRunning,
+    updateDealDeckPosition,
+  ]);
+
+  useEffect(() => {
     if (!dealAreaRef.current) {
       return undefined;
     }
 
-    let animationFrameId = null;
-
-    const scheduleUpdate = () => {
-      if (animationFrameId !== null) {
-        cancelAnimationFrame(animationFrameId);
-      }
-      animationFrameId = requestAnimationFrame(updateDealDeckPosition);
-    };
-
-    if (!isDealAnimationRunning) {
-      scheduleUpdate();
-    }
+    let resizeAnimationFrameId = null;
 
     const handleResize = () => {
-      if (!isDealAnimationRunning) {
-        scheduleUpdate();
+      if (isDealAnimationRunning) {
+        return;
       }
+
+      if (resizeAnimationFrameId !== null) {
+        cancelAnimationFrame(resizeAnimationFrameId);
+      }
+
+      resizeAnimationFrameId = requestAnimationFrame(() => {
+        resizeAnimationFrameId = null;
+        updateDealDeckPosition();
+      });
     };
 
     window.addEventListener('resize', handleResize);
 
     return () => {
-      if (animationFrameId !== null) {
-        cancelAnimationFrame(animationFrameId);
+      if (resizeAnimationFrameId !== null) {
+        cancelAnimationFrame(resizeAnimationFrameId);
       }
       window.removeEventListener('resize', handleResize);
     };
-  }, [
-    updateDealDeckPosition,
-    dealingDecks,
-    isDealAnimationRunning,
-  ]);
+  }, [isDealAnimationRunning, updateDealDeckPosition]);
   /*
   ====================================================
   =================== HANDLER ========================
