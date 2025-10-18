@@ -335,11 +335,14 @@ function DealArea(props) {
           {pendingDealCards.map((card, index) => {
             const totalCards = pendingDealCards.length;
             const isActive = index === pendingActiveIndex;
+            const isQueued = index > pendingActiveIndex;
             return (
               <Styled.PendingDealCard
                 key={card?.id ?? `pending-${index}`}
                 $zIndex={totalCards - index}
                 $isActive={isActive}
+                $isQueued={isQueued}
+                $isDealt={index < pendingActiveIndex}
                 data-pending-card={
                   isActive
                     ? 'front'

@@ -90,8 +90,8 @@ export const PendingDealCard = styled.div`
   top: 0;
   width: auto;
   z-index: ${(props) => 10 + props.$zIndex};
-  opacity: ${(props) => (props.$isActive ? 1 : 0)};
-  transition: opacity 120ms ease-out;
+  opacity: ${(props) => (props.$isDealt ? 0 : 1)};
+  transition: none;
 
   img {
     height: 100%;
