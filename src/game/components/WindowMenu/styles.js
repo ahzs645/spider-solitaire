@@ -28,9 +28,27 @@ export const MenuItem = styled.div`
 `;
 
 export const MenuButton = styled(styledComponents.Button)`
+  background: transparent;
+  border: 0;
+  box-shadow: none;
   color: black;
   font-size: 11px;
+  min-height: 0;
+  min-width: 0;
+  padding: 2px 6px;
   text-align: left;
+
+  &:active,
+  &.active {
+    box-shadow: none;
+  }
+
+  &:focus,
+  &:focus-visible,
+  &.focused {
+    outline: none;
+    outline-offset: 0;
+  }
 
   :hover + div {
     display: flex;
@@ -51,8 +69,13 @@ export const MenuContent = styled.div`
 `;
 
 export const SubMenuButton = styled(styledComponents.Button)`
+  background: transparent;
+  border: 0;
+  box-shadow: none;
   color: black;
   font-size: 11px;
+  min-height: 0;
+  min-width: 0;
   padding: 2px 2px 4px 12px;
   text-align: left;
   width: 100%;
@@ -60,5 +83,17 @@ export const SubMenuButton = styled(styledComponents.Button)`
   &:hover {
     background-color: #316ac5;
     color: white;
+  }
+
+  &:active,
+  &.active {
+    box-shadow: none;
+  }
+
+  &:focus,
+  &:focus-visible,
+  &.focused {
+    outline: none;
+    outline-offset: 0;
   }
 `;

@@ -15,6 +15,35 @@ const audios = {
   win: WinSound,
 };
 
+// Cache single audio instances per sound to avoid creating too many players
+const audioInstances = {};
+
+const getOrCreateAudio = (soundName) => {
+  if (!audioInstances[soundName]) {
+    const audio = new Audio(audios[soundName]);
+    audio.preload = 'auto';
+
+    const originalPlay = audio.play.bind(audio);
+    audio.play = () => {
+      try {
+        audio.currentTime = 0;
+      } catch (e) {
+        // Ignore errors resetting currentTime (e.g., if not ready)
+      }
+
+      const playPromise = originalPlay();
+      if (playPromise && typeof playPromise.catch === 'function') {
+        playPromise.catch(() => {});
+      }
+      return playPromise;
+    };
+
+    audioInstances[soundName] = audio;
+  }
+
+  return audioInstances[soundName];
+};
+
 /*
   ====================================================
   Returns playable Audio objects of the given sound
@@ -26,7 +55,7 @@ export default function getSounds(...soundList) {
   const soundPlayFunctions = [];
 
   soundList.forEach((soundName) => {
-    soundPlayFunctions.push(new Audio(audios[soundName]));
+    soundPlayFunctions.push(getOrCreateAudio(soundName));
   });
 
   return soundPlayFunctions;
