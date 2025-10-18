@@ -11,6 +11,7 @@ import CompletedDeckArea from '../../components/Game/CompletedArea';
 import HintArea from '../../components/Game/HintArea';
 import DealArea from '../../components/Game/DealArea';
 import DifficultyDialog from '../../components/Game/DifficultyDialog';
+import FlyingCardsOverlay from '../../components/Game/FlyingCardsOverlay';
 // Assets
 import * as Styled from './styles';
 
@@ -51,6 +52,7 @@ function SolitaireGame() {
             onCancel={handleCancelDifficulty}
           />
         )}
+        <FlyingCardsOverlay />
         <Window title="Spider Solitaire">
           <Styled.Board>
             <DeckArea />
