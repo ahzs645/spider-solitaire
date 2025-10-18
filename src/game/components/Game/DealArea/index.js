@@ -38,23 +38,13 @@ function DealArea(props) {
   const scheduledDealFrameRef = useRef(null);
   const pendingRemovalTimeoutsRef = useRef([]);
   const [pendingActiveIndex, setPendingActiveIndex] = useState(0);
+  const [pendingDealCardOffset, setPendingDealCardOffset] = useState(0);
 
   const getTopCardRect = useCallback(() => {
     const dealAreaElement = dealAreaRef.current;
 
     if (!dealAreaElement) {
       return null;
-    }
-
-    const pendingFrontCard = dealAreaElement.querySelector(
-      '[data-pending-card="front"]',
-    );
-
-    if (pendingFrontCard) {
-      const pendingMeasurementTarget =
-        pendingFrontCard.querySelector('img') || pendingFrontCard;
-
-      return pendingMeasurementTarget.getBoundingClientRect();
     }
 
     const childCards = Array.from(dealAreaElement.children).filter(
@@ -70,16 +60,16 @@ function DealArea(props) {
       return null;
     }
 
-    const topMostCard = visibleCards.reduce((farthest, element) => {
-      const currentPosition = Number(element.dataset.position) || -Infinity;
-      if (!farthest) {
+    const topMostCard = visibleCards.reduce((closest, element) => {
+      const currentPosition = Number(element.dataset.position) || Infinity;
+      if (!closest) {
         return element;
       }
 
-      const farthestPosition =
-        Number(farthest.dataset.position) || -Infinity;
+      const closestPosition =
+        Number(closest.dataset.position) || Infinity;
 
-      return currentPosition > farthestPosition ? element : farthest;
+      return currentPosition < closestPosition ? element : closest;
     }, null);
 
     if (!topMostCard) {
@@ -108,21 +98,50 @@ function DealArea(props) {
       x: targetRect.left + targetRect.width / 2,
       y: targetRect.top + targetRect.height / 2,
     });
+
+    if (dealAreaRef.current) {
+      const containerRect =
+        dealAreaRef.current.getBoundingClientRect();
+      const offset = targetRect.left - containerRect.left;
+
+      setPendingDealCardOffset((previousOffset) => {
+        if (!Number.isFinite(offset)) {
+          return previousOffset;
+        }
+
+        if (Math.abs(previousOffset - offset) < 0.5) {
+          return previousOffset;
+        }
+
+        return offset;
+      });
+    }
   }, [getTopCardRect, setDealDeckPosition]);
 
   const hasMeasuredPendingRef = useRef(false);
+  const lastMeasuredOffsetRef = useRef(0);
 
   useLayoutEffect(() => {
     if (!pendingDealCards.length) {
       hasMeasuredPendingRef.current = false;
+      lastMeasuredOffsetRef.current = 0;
       return undefined;
     }
 
-    if (isDealAnimationRunning && hasMeasuredPendingRef.current) {
+    const hasOffsetChanged =
+      Math.abs(lastMeasuredOffsetRef.current - pendingDealCardOffset) >=
+      0.5;
+
+    if (
+      isDealAnimationRunning &&
+      hasMeasuredPendingRef.current &&
+      !hasOffsetChanged
+    ) {
       return undefined;
     }
 
     hasMeasuredPendingRef.current = true;
+    lastMeasuredOffsetRef.current = pendingDealCardOffset;
 
     const frameId = requestAnimationFrame(updateDealDeckPosition);
 
@@ -131,6 +150,7 @@ function DealArea(props) {
     };
   }, [
     pendingDealCards.length,
+    pendingDealCardOffset,
     isDealAnimationRunning,
     updateDealDeckPosition,
   ]);
@@ -145,6 +165,7 @@ function DealArea(props) {
       });
       pendingRemovalTimeoutsRef.current = [];
       setPendingActiveIndex(0);
+      setPendingDealCardOffset(0);
     };
   }, []);
 
@@ -331,17 +352,17 @@ function DealArea(props) {
       $dealingDecksLength={dealingDecks.length}
     >
       {pendingDealCards.length ? (
-        <Styled.PendingDealCards data-visible="true">
+        <Styled.PendingDealCards
+          data-visible="true"
+          $offset={pendingDealCardOffset}
+        >
           {pendingDealCards.map((card, index) => {
             const totalCards = pendingDealCards.length;
             const isActive = index === pendingActiveIndex;
-            const isQueued = index > pendingActiveIndex;
             return (
               <Styled.PendingDealCard
                 key={card?.id ?? `pending-${index}`}
                 $zIndex={totalCards - index}
-                $isActive={isActive}
-                $isQueued={isQueued}
                 $isDealt={index < pendingActiveIndex}
                 data-pending-card={
                   isActive

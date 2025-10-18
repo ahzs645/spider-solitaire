@@ -77,10 +77,13 @@ export const DealArea = styled.div`
 `;
 
 export const PendingDealCards = styled.div`
-  inset: 0;
   pointer-events: none;
   position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateX(${(props) => props.$offset || 0}px);
   z-index: 10;
+  height: 100%;
 `;
 
 export const PendingDealCard = styled.div`
