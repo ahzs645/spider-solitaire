@@ -285,28 +285,31 @@ function DealArea(props) {
 
       triggerDealAnimation(newlyDealtCards);
 
-      pendingRemovalTimeoutsRef.current = nextDealCards.map(
-        (_card, index) => {
-          const delay =
-            index * INITIAL_DEAL_ANIMATION_DELAY +
-            INITIAL_DEAL_ANIMATION_DURATION;
+      const timeouts = [];
 
-          return setTimeout(() => {
-            setPendingActiveIndex((previous) => {
-              const nextIndex = Math.min(
-                previous + 1,
-                nextDealCards.length,
-              );
+      nextDealCards.forEach((_card, index) => {
+        const startDelay = index * INITIAL_DEAL_ANIMATION_DELAY;
 
-              if (index === nextDealCards.length - 1) {
-                setPendingDealCards([]);
-              }
+        const removalTimeoutId = setTimeout(() => {
+          setPendingActiveIndex((previous) => {
+            const targetIndex = index + 1;
+            return targetIndex > previous ? targetIndex : previous;
+          });
 
-              return nextIndex;
-            });
-          }, delay);
-        },
-      );
+          if (index === nextDealCards.length - 1) {
+            const clearTimeoutId = setTimeout(() => {
+              setPendingDealCards([]);
+              setPendingActiveIndex(0);
+            }, INITIAL_DEAL_ANIMATION_DURATION);
+
+            timeouts.push(clearTimeoutId);
+          }
+        }, startDelay);
+
+        timeouts.push(removalTimeoutId);
+      });
+
+      pendingRemovalTimeoutsRef.current = timeouts;
     });
   };
 
