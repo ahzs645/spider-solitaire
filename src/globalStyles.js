@@ -14,6 +14,7 @@ const colors = {
   navyBlue: 'rgb(0, 77, 163)',
   orange: 'rgb(240, 150, 68)',
   beige: 'rgb(236, 233, 216)',
+  red: 'rgb(255, 0, 0)',
   pink: 'rgb(255, 38, 231)',
   aqua: 'rgb(0, 171, 246)',
   transparent: 'transparent',

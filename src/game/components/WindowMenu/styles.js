@@ -14,16 +14,14 @@ export const MenuItem = styled.div`
   padding: 3px 5px;
   position: relative;
 
-  &:hover {
+  &:hover > button:not(:disabled) {
     background-color: #316ac5;
 
-    & > button {
-      color: white;
-    }
+    color: white;
+  }
 
-    div {
-      display: flex;
-    }
+  &:hover > button:not(:disabled) + div {
+    display: flex;
   }
 `;
 
@@ -50,8 +48,10 @@ export const MenuButton = styled(styledComponents.Button)`
     outline-offset: 0;
   }
 
-  :hover + div {
-    display: flex;
+  &:disabled {
+    color: rgba(0, 0, 0, 0.35);
+    cursor: not-allowed;
+    pointer-events: none;
   }
 `;
 

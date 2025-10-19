@@ -53,6 +53,10 @@ To run E2E tests you can run the following lines:
 npm run cypress:open
 ```
 
+## Developer Console Helpers
+
+- `window.playSpiderSolitaireToVictory()` – instantly finishes the active game so you can preview the win state.
+
 
 
 ## How To Play

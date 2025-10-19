@@ -31,7 +31,8 @@ function OptionRow({ checked, onChange, suits, labelText, descriptionText }) {
         style={{ margin: 0 }}
       />
       <Styled.LabelWrapper onClick={onChange}>
-        <strong>{labelText}</strong> {descriptionText}
+        <Styled.LabelText>{labelText}</Styled.LabelText>
+        <span>{descriptionText}</span>
       </Styled.LabelWrapper>
     </Styled.OptionRowWrapper>
   );

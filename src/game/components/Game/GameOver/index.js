@@ -5,6 +5,7 @@ import { GameContext } from '../../../contexts/GameContext';
 import getSounds from '../../../utils/soundUtils';
 // Assets
 import * as Styled from './styles';
+import FireworksCanvas from './FireworksCanvas';
 
 function GameOver() {
   const { setShowDifficultyDialog, showDifficultyDialog } =
@@ -44,6 +45,7 @@ function GameOver() {
 
   return (
     <>
+      <FireworksCanvas isActive={!showDifficultyDialog} />
       <Styled.WinScreen>You Won!</Styled.WinScreen>
       <Styled.Overlay>
         <Styled.XPWrapper>

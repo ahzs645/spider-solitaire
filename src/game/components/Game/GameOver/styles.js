@@ -8,13 +8,13 @@ import {
 
 export const WinScreen = styled.div`
   position: fixed;
-  top: 20%;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  font-size: 42px;
+  transform: translate(-50%, -50%);
+  font-size: clamp(72px, 9vw, 110px);
   font-weight: bold;
-  color: #fffbe6;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+  color: ${(props) => props.theme.colors.titleBarText};
+  animation: ${(props) => props.theme.keyFrames.colorChange} 8s infinite;
   pointer-events: none;
   z-index: 10000;
 `;

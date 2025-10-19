@@ -79,7 +79,15 @@ export const SuitIcon = styled.img`
 
 export const LabelWrapper = styled.label`
   cursor: pointer;
+  display: inline-flex;
+  align-items: baseline;
+  column-gap: 4px;
   white-space: nowrap;
+`;
+
+export const LabelText = styled.span`
+  font-weight: bold;
+  margin-right: 2px;
 `;
 
 export const SmallButton = styled.button`
