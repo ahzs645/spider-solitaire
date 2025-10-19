@@ -34,6 +34,7 @@ function DealArea(props) {
     setDealDeckPosition,
     pendingDealCards,
     setPendingDealCards,
+    setShowEmptySlotWarning,
   } = useContext(GameContext);
   const scheduledDealFrameRef = useRef(null);
   const pendingRemovalTimeoutsRef = useRef([]);
@@ -241,6 +242,17 @@ function DealArea(props) {
     }
 
     if (!dealingDecks.length) {
+      return;
+    }
+
+    // Check if any deck is empty before dealing
+    const canDeal = Object.values(cardDecks).every(
+      (deck) => deck.cards.length > 0
+    );
+
+    if (!canDeal) {
+      cannotDealSound.play();
+      setShowEmptySlotWarning(true);
       return;
     }
 

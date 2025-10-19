@@ -8,9 +8,14 @@ describe('CompletedArea Components', () => {
   it('should be render', () => {
     const handleClick = jest.fn();
 
+    const mockCompletedDecks = [
+      { rank: 13, suit: 'spades' },
+      { rank: 13, suit: 'hearts' }
+    ];
+
     const { container } = render(
       <ThemeProvider theme={theme}>
-        <CompletedArea completedDeckCount={2} onClick={handleClick} />
+        <CompletedArea completedDecks={mockCompletedDecks} onClick={handleClick} />
       </ThemeProvider>
     );
 

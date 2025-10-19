@@ -6,7 +6,7 @@ import Card from '../Card';
 import * as Styled from './styles';
 
 const CompletedDeckArea = (props) => {
-  const { completedDeckCount } = props;
+  const { completedDecks } = props;
 
   /*
   ====================================================
@@ -17,7 +17,7 @@ const CompletedDeckArea = (props) => {
   return (
     <Styled.CompletedDeckArea>
       {React.Children.toArray(
-        Array(completedDeckCount).fill(<Card card={null} isClose />)
+        completedDecks.map((kingCard) => <Card card={kingCard} />)
       )}
     </Styled.CompletedDeckArea>
   );

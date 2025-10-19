@@ -45,7 +45,7 @@ function GameContextProvider(props) {
   const [dealingDecks, setDealingDecks] = useState([]);
   const [isAnyDragging, setIsAnyDragging] = useState(false);
   const [gameStats, setGameStats] = useState({
-    completedDeckCount: 0,
+    completedDecks: [], // Array of completed King cards
     score: 500,
     moves: 0,
   });
@@ -55,6 +55,7 @@ function GameContextProvider(props) {
   const [dealDeckPosition, setDealDeckPosition] = useState({ x: 0, y: 0 });
   const [difficulty, setDifficulty] = useState(null);
   const [showDifficultyDialog, setShowDifficultyDialog] = useState(true);
+  const [showEmptySlotWarning, setShowEmptySlotWarning] = useState(false);
   const [pendingDealCards, setPendingDealCards] = useState([]);
   const initialDealTimerRef = useRef(null);
 
@@ -106,7 +107,7 @@ function GameContextProvider(props) {
       triggerDealAnimation(topCards);
       // Reset game stats when starting new game
       setGameStats({
-        completedDeckCount: 0,
+        completedDecks: [],
         score: 500,
         moves: 0,
       });
@@ -137,7 +138,7 @@ function GameContextProvider(props) {
     setDealingDecks([]);
     setCardDecks(createEmptyDeckState());
     setGameStats((prevStats) => ({
-      completedDeckCount: 8,
+      completedDecks: Array(8).fill({ rank: 13, suit: 'spades' }),
       score: Math.max(prevStats.score, 1000),
       moves: prevStats.moves,
     }));
@@ -164,6 +165,8 @@ function GameContextProvider(props) {
       setDifficulty,
       showDifficultyDialog,
       setShowDifficultyDialog,
+      showEmptySlotWarning,
+      setShowEmptySlotWarning,
       startNewGame,
       triggerDealAnimation,
       beginNewGame,
@@ -180,6 +183,7 @@ function GameContextProvider(props) {
       pendingDealCards,
       difficulty,
       showDifficultyDialog,
+      showEmptySlotWarning,
       startNewGame,
       triggerDealAnimation,
       beginNewGame,

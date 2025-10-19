@@ -12,7 +12,7 @@ describe('DealArea Components', () => {
     const { container } = render(
       <GameContextProvider>
         <ThemeProvider theme={theme}>
-          <DealArea completedDeckCount={2} />
+          <DealArea />
         </ThemeProvider>
       </GameContextProvider>
     );

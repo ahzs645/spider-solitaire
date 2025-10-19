@@ -489,7 +489,12 @@ export const moveCards = (cardDecks, source, destination) => {
     destinationDeck.cards
   );
 
+  let completedKingCard = null;
+
   if (isThereACompletedDeck) {
+    // Capture the King card (first of the 13 cards to be removed)
+    completedKingCard = destinationDeck.cards[destinationDeck.cards.length - 13];
+
     destinationDeck.cards.splice(-13);
     const deduction =
       destinationDeck.visibleCardCount === 13 ? 12 : 13;
@@ -508,6 +513,7 @@ export const moveCards = (cardDecks, source, destination) => {
       [destinationDeckId]: destinationDeck,
     },
     isThereACompletedDeck,
+    completedKingCard,
     isDragSuccessful,
   };
 };

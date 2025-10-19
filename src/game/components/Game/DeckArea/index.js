@@ -134,7 +134,7 @@ const DeckArea = () => {
       index: destinationIndex,
     };
 
-    const { newCardDecks, isThereACompletedDeck, isDragSuccessful } =
+    const { newCardDecks, isThereACompletedDeck, completedKingCard, isDragSuccessful } =
       moveCards(cardDecks, source, destination);
 
     // Update list if drag is successful.
@@ -143,8 +143,8 @@ const DeckArea = () => {
       previousGameStats.moves += 1;
       previousGameStats.score -= 1;
 
-      if (isThereACompletedDeck) {
-        previousGameStats.completedDeckCount += 1;
+      if (isThereACompletedDeck && completedKingCard) {
+        previousGameStats.completedDecks = [...previousGameStats.completedDecks, completedKingCard];
         previousGameStats.score += 100;
       }
 

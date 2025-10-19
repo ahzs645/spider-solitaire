@@ -11,6 +11,7 @@ import CompletedDeckArea from '../../components/Game/CompletedArea';
 import HintArea from '../../components/Game/HintArea';
 import DealArea from '../../components/Game/DealArea';
 import DifficultyDialog from '../../components/Game/DifficultyDialog';
+import EmptySlotWarning from '../../components/Game/EmptySlotWarning';
 // Assets
 import * as Styled from './styles';
 
@@ -23,6 +24,8 @@ function SolitaireGame() {
     beginNewGame,
     showDifficultyDialog,
     setShowDifficultyDialog,
+    showEmptySlotWarning,
+    setShowEmptySlotWarning,
   } = useContext(GameContext);
 
   const handleSelectDifficulty = (selectedDifficulty) => {
@@ -32,6 +35,10 @@ function SolitaireGame() {
 
   const handleCancelDifficulty = () => {
     setShowDifficultyDialog(false);
+  };
+
+  const handleCloseEmptySlotWarning = () => {
+    setShowEmptySlotWarning(false);
   };
 
   /*
@@ -49,12 +56,15 @@ function SolitaireGame() {
             onCancel={handleCancelDifficulty}
           />
         )}
+        {showEmptySlotWarning && (
+          <EmptySlotWarning onClose={handleCloseEmptySlotWarning} />
+        )}
         <Window title="Spider Solitaire">
           <Styled.Board>
             <DeckArea />
             <Styled.BottomArea>
               <CompletedDeckArea
-                completedDeckCount={gameStats.completedDeckCount}
+                completedDecks={gameStats.completedDecks}
               />
               <HintArea
                 cardDecks={cardDecks}
@@ -66,7 +76,7 @@ function SolitaireGame() {
                 cardDecks={cardDecks}
               />
             </Styled.BottomArea>
-            {gameStats.completedDeckCount === 8 && <GameOver />}
+            {gameStats.completedDecks.length === 8 && <GameOver />}
           </Styled.Board>
         </Window>
       </HintContextProvider>
