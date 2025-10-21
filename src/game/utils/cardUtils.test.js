@@ -162,7 +162,7 @@ describe('cardUtils', () => {
       ]);
     });
 
-    it('should not move stack when suits do not match', () => {
+    it('should allow stacking on a different suit when rank matches', () => {
       const cardDecks = {
         deck1: {
           cards: [
@@ -187,8 +187,39 @@ describe('cardUtils', () => {
 
       const result = moveCards(cardDecks, source, destination);
 
+      expect(result.isDragSuccessful).toBeTruthy();
+      expect(result.newCardDecks.deck2.cards.map((card) => card.rank)).toEqual([
+        10, 9, 8,
+      ]);
+    });
+
+    it('should not move stack when dragged cards break suited sequence', () => {
+      const cardDecks = {
+        deck1: {
+          cards: [
+            createCard(9, 'hearts', 0),
+            createCard(8, 'spades', 0),
+          ],
+          visibleCardCount: 2,
+        },
+        deck2: {
+          cards: [createCard(10, 'clubs', 0)],
+          visibleCardCount: 1,
+        },
+      };
+      const source = {
+        index: 0,
+        droppableId: 'deck1',
+      };
+      const destination = {
+        index: cardDecks.deck2.cards.length,
+        droppableId: 'deck2',
+      };
+
+      const result = moveCards(cardDecks, source, destination);
+
       expect(result.isDragSuccessful).toBeFalsy();
-      expect(result.newCardDecks.deck2.cards).toHaveLength(1);
+      expect(result.newCardDecks.deck2.cards.map((card) => card.rank)).toEqual([10]);
     });
   });
 

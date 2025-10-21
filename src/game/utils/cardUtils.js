@@ -451,7 +451,7 @@ export const moveCards = (cardDecks, source, destination) => {
     destinationCardIndex === 0 ||
     (parentCard &&
       selectedCardList[0] &&
-      parentCard.suit === selectedCardList[0].suit &&
+      // Spider allows stacking onto any suit as long as rank descends by one.
       parentCard.rank === selectedCardList[0].rank + 1);
 
   const canMoveStack =
