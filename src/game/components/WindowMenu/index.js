@@ -1,9 +1,9 @@
 // Libraries
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 // Components | Utils
 import { GameContext } from '../../contexts/GameContext';
 import getSounds from '../../utils/soundUtils';
-import { deal, newGame } from '../../utils/cardUtils';
+import { deal } from '../../utils/cardUtils';
 // Assets
 import * as Styled from './styles';
 
@@ -14,7 +14,10 @@ function WindowMenu() {
     dealingDecks,
     setDealingDecks,
     setShowDifficultyDialog,
+    gameStats,
   } = useContext(GameContext);
+
+  const [activeMenu, setActiveMenu] = useState(null);
 
   const [cannotDealSound, dealSound] = getSounds(
     'cannot-deal',
@@ -40,6 +43,21 @@ function WindowMenu() {
 
   const handleNewGameClick = () => {
     setShowDifficultyDialog(true);
+    setActiveMenu(null);
+  };
+
+  const handleMenuClick = (menuId) => {
+    setActiveMenu(activeMenu === menuId ? null : menuId);
+  };
+
+  const handleMenuHover = (menuId) => {
+    if (activeMenu) {
+      setActiveMenu(menuId);
+    }
+  };
+
+  const handleCloseMenu = () => {
+    setActiveMenu(null);
   };
 
   /*
@@ -49,24 +67,44 @@ function WindowMenu() {
   */
 
   return (
-    <Styled.Menu>
-      <Styled.MenuItem>
-        <Styled.MenuButton>Game</Styled.MenuButton>
-        <Styled.MenuContent>
-          <Styled.SubMenuButton onClick={handleNewGameClick}>
-            New Game
-          </Styled.SubMenuButton>
-        </Styled.MenuContent>
-      </Styled.MenuItem>
-      <Styled.MenuItem>
-        <Styled.MenuButton
-          onClick={handleDealClick}
-          disabled={dealingDecks.length === 0}
+    <Styled.MenuBarContainer>
+      <Styled.MenuBar onClick={(e) => e.stopPropagation()}>
+        <Styled.MenuItem
+          className={activeMenu === 'game' ? 'active' : ''}
+          onClick={() => handleMenuClick('game')}
+          onMouseEnter={() => handleMenuHover('game')}
+        >
+          Game
+        </Styled.MenuItem>
+        <Styled.MenuItem
+          className={dealingDecks.length === 0 ? 'disabled' : ''}
+          onClick={dealingDecks.length > 0 ? handleDealClick : undefined}
         >
           Deal!
-        </Styled.MenuButton>
-      </Styled.MenuItem>
-    </Styled.Menu>
+        </Styled.MenuItem>
+        <Styled.MenuItem className="disabled">Help</Styled.MenuItem>
+        <Styled.MenuBarLogo src="/gui/toolbar/barlogo.webp" alt="" />
+      </Styled.MenuBar>
+
+      {activeMenu === 'game' && (
+        <>
+          <Styled.MenuBackdrop onClick={handleCloseMenu} />
+          <Styled.DropdownMenu>
+            <Styled.MenuOption onClick={handleNewGameClick}>
+              New Game
+            </Styled.MenuOption>
+            <Styled.MenuSeparator />
+            <Styled.MenuOption className="disabled">
+              Undo
+            </Styled.MenuOption>
+            <Styled.MenuSeparator />
+            <Styled.MenuOption className="disabled">
+              Options...
+            </Styled.MenuOption>
+          </Styled.DropdownMenu>
+        </>
+      )}
+    </Styled.MenuBarContainer>
   );
 }
 

@@ -3,8 +3,8 @@ import styled from 'styled-components';
 
 export const Window = styled.div`
   background-color: ${(props) => props.theme.colors.xpWindowBg};
-  display: grid;
-  grid-template-rows: 20px 1fr;
+  display: flex;
+  flex-direction: column;
   height: 100%;
   width: 100%;
   z-index: 2;
@@ -25,5 +25,7 @@ export const TitleBar = styled.div`
 `;
 
 export const WindowBody = styled.div`
-  height: 100%;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 `;
